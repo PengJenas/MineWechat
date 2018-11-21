@@ -34,11 +34,11 @@ https://github.com/PengJenas/MineWechat
 > * <2> #截图
 > * <3> #关机
 > * <4> #取消关机
-> * <5> #打开@文件/程序                [i]如：[/i][i]#打开@d:\abc.txt   或者   #打开@d:\qq.lnk[/i]
-> * <6> #关闭@进程名                     [i]如：[/i][i]关闭@notepad      或者    #关闭@qq[/i]
-> * <7> #网页@www.baidu.com    [i]   默认用IE浏览器打开，如有需要可以修改[/i]
+> * <5> #打开@文件/程序                `如：#打开@d:\abc.txt   或者   #打开@d:\qq.lnk`
+> * <6> #关闭@进程名                   `如：关闭@notepad      或者    #关闭@qq`
+> * <7> #网页@www.baidu.com           `默认用IE浏览器打开，如有需要可以修改`
 > * <8> #关闭浏览器
-> * <9> #控制@cmd命令                  如：#控制@explorer c:\windows   
+> * <9> #控制@cmd命令                  `如：#控制@explorer c:\windows`   
 > * <10> #最小化窗口
 > * <11> #切换窗口
 
