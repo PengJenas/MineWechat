@@ -22,6 +22,13 @@
 - 4.增加了些许功能，具体使用方法需要对cmd命令有所了解才行
 - 5.程序图标来自网络，侵删
 
+![img1](https://attach.52pojie.cn/forum/201809/22/184703di1k77bc3wno713o.png)
+![img2](https://attach.52pojie.cn/forum/201809/22/184703x8z1kwm12kzd0ftd.png)
+![img3](https://attach.52pojie.cn/forum/201809/22/184702w55mgut3mt055td5.png)
+![img4](https://attach.52pojie.cn/forum/201809/22/184829ned968o3f33m28z4.png)
+![img5](https://attach.52pojie.cn/forum/201809/22/185625ch8ysripyiwveiyh.png)
+
+
 ### 软件使用
 远程控制相关指令：
 > *  #帮助
