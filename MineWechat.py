@@ -196,7 +196,7 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):			# 注意Ui_Form要跟UI文件中的
 
     # 微信忙碌回复功能开关
     def check_busy(self):
-        check_state = myshow.checkBox_busy.checkState()
+        check_state = self.checkBox_busy.checkState()
         #print(check_state)
         global reply_busy
         if check_state == QtCore.Qt.Checked:
@@ -208,7 +208,7 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):			# 注意Ui_Form要跟UI文件中的
 
     # 微信机器人回复功能开关
     def check_bot(self):
-        check_state = myshow.checkBox_bot.checkState()
+        check_state = self.checkBox_bot.checkState()
         #print(check_state)
         global reply_bot
         if check_state == QtCore.Qt.Checked:
@@ -230,7 +230,7 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):			# 注意Ui_Form要跟UI文件中的
 
     # 微信远程控制功能开关
     def check_remote(self):
-        check_state = myshow.checkBox_remote.checkState()
+        check_state = self.checkBox_remote.checkState()
         #print(check_state)
         global remote_pc
         if check_state == QtCore.Qt.Checked:
