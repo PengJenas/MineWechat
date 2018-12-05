@@ -11,7 +11,7 @@ import requests,json    # 爬机器人回复
 import itchat    # 微信库
 from itchat.content import *
 from PyQt5 import QtCore, QtGui, QtWidgets    # PYQT5
-from sendUI import Ui_Form    # 程序UI
+from MineUI import Ui_Form    # 程序UI
 import img_rc    # 程序图标文件
 
 
