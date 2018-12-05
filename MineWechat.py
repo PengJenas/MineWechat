@@ -1,36 +1,38 @@
 # -*- coding: utf-8 -*-
-# by Jenas
+# Author: Jenas
 
 import os
 import time
-import win32api	  		    # 系统api
-import win32con    		    # 操作键盘
-from PIL import ImageGrab	# 截图用
-import imghdr               # 识别图像格式
-import requests,json        # 爬机器人回复
-import itchat               # 微信库
+import win32api    # 系统api
+import win32con    # 操作键盘
+from PIL import ImageGrab    # 截图用
+import imghdr    # 识别图像格式
+import requests,json    # 爬机器人回复
+import itchat    # 微信库
 from itchat.content import *
-from PyQt5 import QtCore, QtGui, QtWidgets
-from sendUI import Ui_Form
-import img_rc
+from PyQt5 import QtCore, QtGui, QtWidgets    # PYQT5
+from sendUI import Ui_Form    # 程序UI
+import img_rc    # 程序图标文件
 
 
 #########################################################################################################
 # MyWindow窗口
 #########################################################################################################
 
-class MyWindow(QtWidgets.QWidget,Ui_Form):			# 注意Ui_Form要跟UI文件中的匹配
+class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文件中的匹配
     def __init__(self):                             
         super(MyWindow, self).__init__()
         self.setupUi(self)
         # 初始化标签、文本框提示
         self.output_info("点击“扫码登录”按钮！")
-        self.textEdit_text_friend.setText("输入信息")
+        self.textEdit_text_friend.setText("输入信息：")
         self.textEdit_text_chatroom.setText("可以@群里的某个人")
+        self.textEdit_remote.setText("[帮助信息]手机端微信编辑“#帮助”发送至“文件传输助手”")
         self.lineEdit_busy.setText("您好，我现在忙，不方便回复您！有事请留言！[微笑]")
         # 按钮
         self.pushButton_login.clicked.connect(self.login)
         self.pushButton_logout.clicked.connect(self.logout)
+        self.pushButton_logout.setEnabled(False)    # 使按钮失效
         self.pushButton_text_helper.clicked.connect(self.text_to_helper)
         self.pushButton_text_friend.clicked.connect(self.text_to_friend)
         self.pushButton_text_chatroom.clicked.connect(self.text_to_chatroom)
@@ -38,7 +40,6 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):			# 注意Ui_Form要跟UI文件中的
         self.pushButton_file_helper.clicked.connect(self.file_to_helper)
         self.pushButton_file_friend.clicked.connect(self.file_to_friend)
         self.pushButton_file_chatroom.clicked.connect(self.file_to_chatroom)
-        self.pushButton_logout.setEnabled(False)    # 使按钮失效
         # 复选框
         self.checkBox_remote.setChecked(True)   # 默认勾选
         self.checkBox_busy.stateChanged.connect(self.check_busy) 
@@ -49,33 +50,8 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):			# 注意Ui_Form要跟UI文件中的
 ############################################################################################
 # 底部系统,包含：登陆、注销、系统信息
 ############################################################################################
-   
-    # 登陆按钮
-    def login(self):
-        #print("执行：login")
-        self.output_info("请扫描二维码...")
-        # 按钮启用和失效
-        myshow.pushButton_login.setEnabled(False)
-        myshow.pushButton_logout.setEnabled(True)
-        # 创建线程
-        self.thread = MyThread()
-        # 线程的信号槽，依次是写：微信聊天记录、系统登录信息、微信远控信息
-        self.thread._signal.connect(self.write_log)	
-        self.thread._signal_2.connect(self.output_info)
-        self.thread._signal_3.connect(self.output_remote_info)
-        # 开始线程
-        self.thread.start()
 
-    # 注销按钮
-    def logout(self):
-        #print("执行：logout")
-        # 按钮启用和失效
-        self.pushButton_login.setEnabled(True)
-        self.pushButton_logout.setEnabled(False)
-        itchat.logout()
-        self.output_info("您已注销微信！")
-
-    # 获取当前时间戳,并转格式，外面再套上方括号
+    # 获取当前时间戳,并转格式,外面再套上方括号
     # 就像这样：[18/09/17 18:12:38]
     def get_now_time(self):     
         now_time = time.strftime("%y/%m/%d %H:%M:%S", time.localtime(time.time()))
@@ -87,11 +63,36 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):			# 注意Ui_Form要跟UI文件中的
         time_msg = self.get_now_time()
         self.textEdit_output.append(time_msg+"[系统信息]"+info)
 
+    # 登陆按钮
+    def login(self):
+        #print("执行：login")
+        self.output_info("请扫描二维码...")
+        # 按钮启用和失效
+        self.pushButton_login.setEnabled(False)
+        self.pushButton_logout.setEnabled(True)
+        # 创建线程
+        self.thread = MyThread()
+        # 线程的信号槽，依次输出：微信聊天记录、系统登录信息、微信远控信息
+        self.thread._signal_1.connect(self.write_log)   
+        self.thread._signal_2.connect(self.output_info)
+        self.thread._signal_3.connect(self.output_remote_info)
+        # 开始线程
+        self.thread.start()
+
+    # 注销按钮
+    def logout(self):
+        # 按钮启用和失效
+        self.pushButton_login.setEnabled(True)
+        self.pushButton_logout.setEnabled(False)
+        itchat.logout()
+        self.output_info("您已注销微信！")
+
+    
 #######################################################################################
 # 微信发送文字、文件
 #######################################################################################
     
-    #记录聊天信息,包含：发送信息、接收信息
+    # 记录聊天信息,包含：发送信息、接收信息
     # 参数:是否群聊，消息内容，消息时间, 依次类型: bool,str,int
     def write_log(self,fromChatroom,message,send_time,):
         myTime = time.strftime("%m-%d %H:%M:%S", time.localtime(send_time))  # "%Y/%m/%d %H:%M:%S"
@@ -107,10 +108,10 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):			# 注意Ui_Form要跟UI文件中的
         text_send = self.textEdit_text_friend.toPlainText()
         itchat.send(text_send, toUserName='filehelper')
         self.output_info("成功发送文字至：文件传输助手")
-        fromChatroom = False	# 做个记号，不是群聊
-        message = "Python → 助手：" + text_send		# 编辑聊天记录内容
-        send_time = time.time()		# 获取当前时间
-        self.write_log(fromChatroom,message, send_time)		# 写聊天记录
+        fromChatroom = False    # 做个记号，不是群聊
+        message = "Python → 助手：" + text_send        # 编辑聊天记录内容
+        send_time = time.time()     # 获取当前时间
+        self.write_log(fromChatroom,message, send_time)     # 写聊天记录
 
     # 发送文字到好友
     def text_to_friend(self):
@@ -119,10 +120,10 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):			# 注意Ui_Form要跟UI文件中的
         text_friend = self.lineEdit_text_friend.text()
         search_username = itchat.search_friends(text_friend)
         if search_username:
-            text_username = search_username[0]['UserName']		#用户ID，一长串数字，用于发消息
-            text_nickname = search_username[0]['NickName']		#用户昵称
+            text_username = search_username[0]['UserName']      #用户ID，一长串数字，用于发消息
+            text_nickname = search_username[0]['NickName']      #用户昵称
             itchat.send(text_send, toUserName=text_username)
-            # itchat.send('来自：微信传输助手', toUserName=text_username)
+            # itchat.send('来自：MineWechat', toUserName=text_username)
             self.output_info("成功发送文字至：%s" % text_nickname)
             fromChatroom = False
             message = "Python → "+ text_nickname + "：" + text_send
@@ -172,8 +173,8 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):			# 注意Ui_Form要跟UI文件中的
         file_friend = self.lineEdit_file_friend.text()
         search_username = itchat.search_friends(file_friend)
         if search_username:
-            file_username = search_username[0]['UserName']		#用户ID，一长串数字，用于发消息
-            file_nickname = search_username[0]['NickName']		#用户昵称
+            file_username = search_username[0]['UserName']      #用户ID，一长串数字，用于发消息
+            file_nickname = search_username[0]['NickName']      #用户昵称
             self.file_to_who(file_username)
             self.output_info("成功发送文件至：%s" % file_nickname)
         else:
@@ -190,8 +191,9 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):			# 注意Ui_Form要跟UI文件中的
         else:
             self.output_info("群聊名称出错了！")
 
+
 ###############################################################################
-# 功能选项
+# 功能选项,及远控信息
 ###############################################################################
 
     # 微信忙碌回复功能开关
@@ -247,13 +249,15 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):			# 注意Ui_Form要跟UI文件中的
         self.textEdit_remote.append(remote_info)
 
 
+
+
 #########################################################################################################
 # 线程
 #########################################################################################################
 
 class MyThread(QtCore.QThread):
     # 定义信号，用于记录聊天信息，含：是否群聊，消息内容，消息时间
-    _signal = QtCore.pyqtSignal(bool,str,int)
+    _signal_1 = QtCore.pyqtSignal(bool,str,int)
     # 定义信号，仅用于记录登陆成功的两条系统信息
     _signal_2 = QtCore.pyqtSignal(str)
     # 定义信号,用于记录远控信息
@@ -267,6 +271,9 @@ class MyThread(QtCore.QThread):
         self._signal_2.emit('成功登陆! 账号： %s' % userInfo['User']['NickName'])
         self._signal_2.emit('准备就绪，可以关闭二维码了！')
         itchat.run()
+
+
+
 
 #########################################################################################################
 # 处理微信信息
@@ -282,7 +289,7 @@ def get_msg(msg):
         from_Name = '我'
         if msg['ToUserName'] == 'filehelper':
             to_Name = '助手'
-            if '#' in msg['Text'] and remote_pc == True:	# 执行命令条件：1发给助手 2命令中带井号 3远控开启
+            if '#' in msg['Text'] and remote_pc == True:    # 执行命令条件：1发给助手 2命令中带井号 3远控开启
                 do_what = msg['Text'].split('#')[1]  # #分割，取第二个元素，即：具体指令。
                 wechat_do(do_what)
         else:
@@ -301,7 +308,7 @@ def get_msg(msg):
             from_Name = msg['User'].get('NickName')
     message = from_Name + ' → ' + to_Name + '：' + str(msg['Text'])
     send_time = msg['CreateTime']
-    myshow.thread._signal.emit(fromChatroom,message, send_time)		# 信号焕发，连接 write_log
+    myshow.thread._signal_1.emit(fromChatroom,message, send_time)       # 信号焕发，连接 write_log
 
 
 # 私聊信息，图片、视频等
@@ -332,7 +339,7 @@ def download_files(msg):
             from_Name = msg['User'].get('NickName')
     message =  from_Name + ' → ' + to_Name + '：'+ '[文件：%s]'%msg['FileName']
     send_time = msg['CreateTime']
-    myshow.thread._signal.emit(fromChatroom, message, send_time)		# 信号焕发，连接 write_log
+    myshow.thread._signal_1.emit(fromChatroom, message, send_time)      # 信号焕发，连接 write_log
 
 # 群聊信息,@我的文字信息
 @itchat.msg_register(TEXT, isGroupChat=True)
@@ -347,7 +354,8 @@ def get_msg_at(msg):
         fromChatroom = True
         message = from_Name + ' @ 我' + '：' + str(msg['Text'])
         send_time = msg['CreateTime']
-        myshow.thread._signal.emit(fromChatroom,message, send_time)		# 信号焕发，连接 write_log
+        myshow.thread._signal_1.emit(fromChatroom,message, send_time)       # 信号焕发，连接 write_log
+
 
 
 
@@ -405,7 +413,7 @@ def read_me():
     readme_msg += r'#控制@explorer c:\windows'+'\n'
     readme_msg += '#最小化窗口\n'
     readme_msg += '#切换窗口\n'
-    itchat.send(readme_msg, toUserName='filehelper')		# 发送帮助信息
+    itchat.send(readme_msg, toUserName='filehelper')        # 发送帮助信息
     myshow.thread._signal_3.emit('[远控信息] 已发送帮助信息')
 
 def img_to_myself():
@@ -449,7 +457,7 @@ def shutdown_process(do_cmd):
 
 def open_web(do_cmd):
     '''浏览器打开网页'''
-    # web_cmd = 'start https://' + do_cmd            # 可以使用默认浏览器打开网页，但接下来关闭浏览器进程时，需要作相应修改
+    # web_cmd = 'start https://' + do_cmd         # 可以使用默认浏览器打开网页，但接下来关闭浏览器进程时，需要作相应修改
     web_cmd = 'start iexplore https://' + do_cmd  # 使用IE打开网页
     os.system(web_cmd)
     send_msg = '[远控信息] 已打开网页：' + do_cmd
@@ -504,11 +512,10 @@ def send_alt_tab():
 # 程序窗口,以及系统托盘
 #########################################################################################################
 
-
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    QtWidgets.QApplication.setQuitOnLastWindowClosed(False)	# 关闭窗口,也不关闭应用程序
+    QtWidgets.QApplication.setQuitOnLastWindowClosed(False) # 关闭窗口,也不关闭应用程序
     myshow = MyWindow()
     myshow.show()
     # 自动回复等功能选项默认开关
@@ -516,17 +523,17 @@ if __name__ == "__main__":
     reply_bot = False
     remote_pc = True
 
+
     # 在系统托盘处显示图标
     tp = QtWidgets.QSystemTrayIcon(myshow)
-
     tp.setIcon(QtGui.QIcon(":img/MineWechat.ico"))
     # 设置系统托盘图标的菜单
-    a1 = QtWidgets.QAction('&显示(Show)',triggered = myshow.show)
+    a1 = QtWidgets.QAction('&显示(Show)',triggered = myshow.show)   
     def quitApp():
         # 关闭窗体程序
-	    QtCore.QCoreApplication.instance().quit()
+        QtCore.QCoreApplication.instance().quit()
         # 隐藏托盘,防止退出后图标残留
-	    tp.setVisible(False)    
+        tp.setVisible(False)    
     a2 = QtWidgets.QAction('&退出(Exit)',triggered = quitApp) # 直接退出可以用QtWidgets.qApp.quit ,但会残留图标直到鼠标经过    
     tpMenu = QtWidgets.QMenu()
     tpMenu.addAction(a1)
@@ -534,14 +541,12 @@ if __name__ == "__main__":
     tp.setContextMenu(tpMenu)
     # 不调用show不会显示系统托盘
     tp.show()
-
     # 托盘信息提示,参数1：标题,参数2：内容,参数3：图标（0没有图标 1信息图标 2警告图标 3错误图标），0还是有一个小图标
-    tp.showMessage('MineWechat','扫码登录微信, 然后关闭窗口, 我还会在系统托盘里!',icon=0)
-
+    tp.showMessage('MineWechat','关闭程序窗口, 我依然在这里!',icon=0)
+    # 鼠标点击托盘图标
     def act(reason):
         # 鼠标点击icon传递的信号会带有一个整形的值，1是表示单击右键，2是双击，3是单击左键，4是用鼠标中键点击
         if reason == 2 or reason == 3:
             myshow.show()
     tp.activated.connect(act)
-
     sys.exit(app.exec_())
