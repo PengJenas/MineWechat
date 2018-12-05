@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>708</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MineWechat</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="img.qrc">
+    <normaloff>:/img/MineWechat.ico</normaloff>:/img/MineWechat.ico</iconset>
+  </property>
+  <widget class="QGroupBox" name="groupBox_login">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>530</y>
+     <width>561</width>
+     <height>161</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>系统</string>
+   </property>
+   <widget class="QPushButton" name="pushButton_logout">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>31</y>
+      <width>241</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>注销微信</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_login">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>31</y>
+      <width>241</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>扫码登录</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="textEdit_output">
+    <property name="geometry">
+     <rect>
+      <x>21</x>
+      <y>70</y>
+      <width>521</width>
+      <height>74</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QTabWidget" name="tabWidget">
+   <property name="geometry">
+    <rect>
+     <x>19</x>
+     <y>19</y>
+     <width>561</width>
+     <height>491</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>4</number>
+   </property>
+   <widget class="QWidget" name="chat_friend">
+    <attribute name="title">
+     <string>微信私聊</string>
+    </attribute>
+    <widget class="QGroupBox" name="groupBox_friend_record">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>20</y>
+       <width>511</width>
+       <height>221</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>私聊记录</string>
+     </property>
+     <widget class="QTextEdit" name="textEdit_friend_record">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>20</y>
+        <width>471</width>
+        <height>180</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_text_friend">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>250</y>
+       <width>511</width>
+       <height>201</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>发送文字</string>
+     </property>
+     <widget class="QTextEdit" name="textEdit_text_friend">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>20</y>
+        <width>471</width>
+        <height>81</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_text_helper">
+      <property name="geometry">
+       <rect>
+        <x>22</x>
+        <y>121</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>文件助手：</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_text_friend">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>154</y>
+        <width>211</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>发给好友</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_text_friend">
+      <property name="geometry">
+       <rect>
+        <x>80</x>
+        <y>155</y>
+        <width>171</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_text_helper">
+      <property name="geometry">
+       <rect>
+        <x>80</x>
+        <y>121</y>
+        <width>411</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>发送至文件传输助手</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_text_friend">
+      <property name="geometry">
+       <rect>
+        <x>22</x>
+        <y>155</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>好友昵称：</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="chat_chatroom">
+    <attribute name="title">
+     <string>微信群聊</string>
+    </attribute>
+    <widget class="QGroupBox" name="groupBox_text_chatroom">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>250</y>
+       <width>511</width>
+       <height>201</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>发送文字</string>
+     </property>
+     <widget class="QTextEdit" name="textEdit_text_chatroom">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>20</y>
+        <width>471</width>
+        <height>81</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_text_chatroom">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>121</y>
+        <width>211</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>发至群聊</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_text_chatroom">
+      <property name="geometry">
+       <rect>
+        <x>88</x>
+        <y>121</y>
+        <width>171</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_text_chatroom">
+      <property name="geometry">
+       <rect>
+        <x>22</x>
+        <y>121</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>群聊名称：</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_chatroom_record">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>20</y>
+       <width>511</width>
+       <height>221</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>群聊@记录</string>
+     </property>
+     <widget class="QTextEdit" name="textEdit_chatroom_record">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>20</y>
+        <width>471</width>
+        <height>180</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="file_send">
+    <attribute name="title">
+     <string>发送文件</string>
+    </attribute>
+    <widget class="QGroupBox" name="groupBox_file_dir">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>20</y>
+       <width>511</width>
+       <height>101</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>选取文件</string>
+     </property>
+     <widget class="QLineEdit" name="lineEdit_file_dir">
+      <property name="geometry">
+       <rect>
+        <x>87</x>
+        <y>60</y>
+        <width>403</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_file_dir">
+      <property name="geometry">
+       <rect>
+        <x>21</x>
+        <y>60</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>文件目录：</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_open_file">
+      <property name="geometry">
+       <rect>
+        <x>21</x>
+        <y>30</y>
+        <width>471</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>点击选择文件（暂不支持中文文件名）</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_file_send">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>150</y>
+       <width>511</width>
+       <height>131</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>发送文件</string>
+     </property>
+     <widget class="QLabel" name="label_file_helper">
+      <property name="geometry">
+       <rect>
+        <x>27</x>
+        <y>31</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>文件助手：</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_file_chatroom">
+      <property name="geometry">
+       <rect>
+        <x>93</x>
+        <y>91</y>
+        <width>181</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_file_friend">
+      <property name="geometry">
+       <rect>
+        <x>27</x>
+        <y>61</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>好友昵称：</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_file_friend">
+      <property name="geometry">
+       <rect>
+        <x>93</x>
+        <y>61</y>
+        <width>181</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_file_friend">
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>60</y>
+        <width>201</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>发给好友</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_file_chatroom">
+      <property name="geometry">
+       <rect>
+        <x>27</x>
+        <y>91</y>
+        <width>60</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>群聊名称：</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_file_chatroom">
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>90</y>
+        <width>201</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>发至群聊</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_file_helper">
+      <property name="geometry">
+       <rect>
+        <x>93</x>
+        <y>30</y>
+        <width>399</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>发送至文件传输助手</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="remote">
+    <attribute name="title">
+     <string>远程控制</string>
+    </attribute>
+    <widget class="QGroupBox" name="groupBox_remote">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>20</y>
+       <width>511</width>
+       <height>421</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>远程控制</string>
+     </property>
+     <widget class="QCheckBox" name="checkBox_remote">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>20</y>
+        <width>441</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>手机端微信控制此电脑</string>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="textEdit_remote">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>50</y>
+        <width>471</width>
+        <height>351</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="option">
+    <attribute name="title">
+     <string>功能选项</string>
+    </attribute>
+    <widget class="QGroupBox" name="groupBox_option">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>10</y>
+       <width>511</width>
+       <height>421</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>功能选项</string>
+     </property>
+     <widget class="QCheckBox" name="checkBox_busy">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>30</y>
+        <width>71</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>忙碌回复</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="checkBox_bot">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>90</y>
+        <width>91</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>机器人回复</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_busy">
+      <property name="geometry">
+       <rect>
+        <x>110</x>
+        <y>50</y>
+        <width>381</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_busy">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>50</y>
+        <width>81</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>编辑回复内容：</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="img.qrc"/>
+ </resources>
+ <connections/>
+</ui>
