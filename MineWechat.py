@@ -32,7 +32,6 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         # 按钮
         self.pushButton_login.clicked.connect(self.login)
         self.pushButton_logout.clicked.connect(self.logout)
-        self.pushButton_logout.setEnabled(False)    # 使按钮失效
         self.pushButton_text_helper.clicked.connect(self.text_to_helper)
         self.pushButton_text_friend.clicked.connect(self.text_to_friend)
         self.pushButton_text_chatroom.clicked.connect(self.text_to_chatroom)
@@ -40,6 +39,15 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         self.pushButton_file_helper.clicked.connect(self.file_to_helper)
         self.pushButton_file_friend.clicked.connect(self.file_to_friend)
         self.pushButton_file_chatroom.clicked.connect(self.file_to_chatroom)
+        # 登陆微信前,使按钮失效  
+        self.pushButton_logout.setEnabled(False)         
+        self.pushButton_text_helper.setEnabled(False)
+        self.pushButton_text_friend.setEnabled(False)
+        self.pushButton_text_chatroom.setEnabled(False)
+        self.pushButton_open_file.setEnabled(False)
+        self.pushButton_file_helper.setEnabled(False)
+        self.pushButton_file_friend.setEnabled(False)
+        self.pushButton_file_chatroom.setEnabled(False)
         # 复选框
         self.checkBox_remote.setChecked(True)   # 默认勾选
         self.checkBox_busy.stateChanged.connect(self.check_busy) 
@@ -70,6 +78,14 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         # 按钮启用和失效
         self.pushButton_login.setEnabled(False)
         self.pushButton_logout.setEnabled(True)
+        self.pushButton_text_helper.setEnabled(True)
+        self.pushButton_text_friend.setEnabled(True)
+        self.pushButton_text_chatroom.setEnabled(True)
+        self.pushButton_open_file.setEnabled(True)
+        self.pushButton_file_helper.setEnabled(True)
+        self.pushButton_file_friend.setEnabled(True)
+        self.pushButton_file_chatroom.setEnabled(True)
+
         # 创建线程
         self.thread = MyThread()
         # 线程的信号槽，依次输出：微信聊天记录、系统登录信息、微信远控信息
@@ -83,7 +99,14 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
     def logout(self):
         # 按钮启用和失效
         self.pushButton_login.setEnabled(True)
-        self.pushButton_logout.setEnabled(False)
+        self.pushButton_logout.setEnabled(False)       
+        self.pushButton_text_helper.setEnabled(False)
+        self.pushButton_text_friend.setEnabled(False)
+        self.pushButton_text_chatroom.setEnabled(False)
+        self.pushButton_open_file.setEnabled(False)
+        self.pushButton_file_helper.setEnabled(False)
+        self.pushButton_file_friend.setEnabled(False)
+        self.pushButton_file_chatroom.setEnabled(False)
         itchat.logout()
         self.output_info("您已注销微信！")
 
@@ -137,7 +160,6 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         #print("执行：text_to_chatroom")
         text_send = self.textEdit_text_chatroom.toPlainText()
         text_chatroom = self.lineEdit_text_chatroom.text()
-
         search_username = itchat.search_chatrooms(text_chatroom)
         if search_username:
             text_username = search_username[0]['UserName']
