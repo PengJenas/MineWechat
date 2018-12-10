@@ -360,7 +360,7 @@ def download_files(msg):
     # 新建接收文件夹
     isExists=os.path.exists("接收文件") 
     if not isExists:
-	    os.makedirs("接收文件")
+        os.makedirs("接收文件")
     os.chdir("接收文件")
     msg.download(msg.fileName)	# 下载文件
     os.chdir("..")
@@ -419,13 +419,13 @@ def wechat_do(do_what):
         elif '控制@' in do_what:
             more_cmd(do_cmd)  # 执行更多cmd命令
         elif '忙碌回复@开' in do_what:
-        	reply_busy_on()	  # 打开忙碌回复
+            reply_busy_on()	  # 打开忙碌回复
         elif '忙碌回复@关' in do_what:
-        	reply_busy_off()	  # 打开忙碌回复
+            reply_busy_off()	  # 打开忙碌回复
         elif '机器人回复@开' in do_what:
-        	reply_robot_on()	  # 打开忙碌回复
+            reply_robot_on()	  # 打开忙碌回复
         elif '机器人回复@关' in do_what:
-        	reply_robot_off()	  # 打开忙碌回复
+            reply_robot_off()	  # 打开忙碌回复
 
 
 
@@ -461,7 +461,7 @@ def img_to_myself():
     # 新建截图文件夹
     isExists=os.path.exists("截图文件")
     if not isExists:
-    	os.makedirs("截图文件") 
+        os.makedirs("截图文件") 
     os.chdir("截图文件")
     ImageGrab.grab().save(img_name)  # 截图并保存
     itchat.send_image(img_name, toUserName='filehelper')  # 微信发送截图给自己
@@ -552,24 +552,37 @@ def send_alt_tab():
     myshow.thread._signal_3.emit('[远控信息] 已切换程序窗口')
 
 def reply_busy_on():
-	'''打开忙碌回复'''
-	myshow.checkBox_busy.setChecked(True)
-	reply_busy = True
+    '''打开忙碌回复'''
+    myshow.checkBox_busy.setChecked(True)
+    reply_busy = True
+    send_msg = '[远控信息] 已打开忙碌回复'
+    itchat.send(send_msg, toUserName='filehelper')
+    myshow.thread._signal_3.emit(send_msg)
+
 
 def reply_busy_off():
-	'''关闭忙碌回复'''
-	myshow.checkBox_busy.setChecked(False)
-	reply_busy = False
+    '''关闭忙碌回复'''
+    myshow.checkBox_busy.setChecked(False)
+    reply_busy = False
+    send_msg = '[远控信息] 已关闭忙碌回复'
+    itchat.send(send_msg, toUserName='filehelper')
+    myshow.thread._signal_3.emit(send_msg)
 
 def reply_robot_on():
-	'''打开机器人回复'''
-	myshow.checkBox_robot.setChecked(True)
-	reply_robot = True
+    '''打开机器人回复'''
+    myshow.checkBox_robot.setChecked(True)
+    reply_robot = True
+    send_msg = '[远控信息] 已打开机器人回复'
+    itchat.send(send_msg, toUserName='filehelper')
+    myshow.thread._signal_3.emit(send_msg)
 
 def reply_robot_off():
-	'''关闭机器人回复'''
-	myshow.checkBox_robot.setChecked(False)
-	reply_robot = False
+    '''关闭机器人回复'''
+    myshow.checkBox_robot.setChecked(False)
+    reply_robot = False
+    send_msg = '[远控信息] 已关闭机器人回复'
+    itchat.send(send_msg, toUserName='filehelper')
+    myshow.thread._signal_3.emit(send_msg)
 
 
 
