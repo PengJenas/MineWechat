@@ -74,8 +74,13 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
 
     # 登陆按钮
     def login(self):
-        #print("执行：login")
-        self.output_info("请扫描二维码...")
+        self.output_info("请扫描二维码...")      
+        self.thread = MyThread()    # 创建线程
+        # 线程的信号槽，依次输出：微信聊天记录、系统登录信息、微信远控信息
+        self.thread._signal_1.connect(self.write_log)   
+        self.thread._signal_2.connect(self.output_info)
+        self.thread._signal_3.connect(self.output_remote_info)  
+        self.thread.start()    # 开始线程
         # 按钮启用和失效
         self.pushButton_login.setEnabled(False)
         self.pushButton_logout.setEnabled(True)
@@ -87,17 +92,10 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         self.pushButton_file_friend.setEnabled(True)
         self.pushButton_file_chatroom.setEnabled(True)
 
-        # 创建线程
-        self.thread = MyThread()
-        # 线程的信号槽，依次输出：微信聊天记录、系统登录信息、微信远控信息
-        self.thread._signal_1.connect(self.write_log)   
-        self.thread._signal_2.connect(self.output_info)
-        self.thread._signal_3.connect(self.output_remote_info)
-        # 开始线程
-        self.thread.start()
-
     # 注销按钮
-    def logout(self):
+    def logout(self):    
+        itchat.logout()
+        self.output_info("您已注销微信！")
         # 按钮启用和失效
         self.pushButton_login.setEnabled(True)
         self.pushButton_logout.setEnabled(False)       
@@ -108,8 +106,7 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         self.pushButton_file_helper.setEnabled(False)
         self.pushButton_file_friend.setEnabled(False)
         self.pushButton_file_chatroom.setEnabled(False)
-        itchat.logout()
-        self.output_info("您已注销微信！")
+        
 
     
 #######################################################################################
@@ -142,36 +139,45 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         #print("执行：tex_to_friend")
         text_send = self.textEdit_text_friend.toPlainText()
         text_friend = self.lineEdit_text_friend.text()
-        search_username = itchat.search_friends(text_friend)
-        if search_username:
-            text_username = search_username[0]['UserName']      #用户ID，一长串数字，用于发消息
-            text_nickname = search_username[0]['NickName']      #用户昵称
-            itchat.send(text_send, toUserName=text_username)
-            # itchat.send('来自：MineWechat', toUserName=text_username)
-            self.output_info("成功发送文字至：%s" % text_nickname)
-            fromChatroom = False
-            message = "Python → "+ text_nickname + "：" + text_send
-            send_time = time.time()
-            self.write_log(fromChatroom,message,send_time)
+        #print('text_friend:%s'%text_friend)
+        if text_friend == '':
+            self.output_info("您还没有输入好友昵称！")
         else:
-            self.output_info("好友昵称出错了！")
+            search_username = itchat.search_friends(text_friend)
+            #print(search_username)
+            if search_username:
+                text_username = search_username[0]['UserName']      #用户ID，一长串数字，用于发消息
+                text_nickname = search_username[0]['NickName']      #用户昵称
+                itchat.send(text_send, toUserName=text_username)
+                # itchat.send('来自：MineWechat', toUserName=text_username)
+                self.output_info("成功发送文字至好友：%s" % text_nickname)
+                fromChatroom = False
+                message = "Python → "+ text_nickname + "：" + text_send
+                send_time = time.time()
+                self.write_log(fromChatroom,message,send_time)               
+            else:
+                self.output_info("找不到该好友！")
+        
 
     # 发送文字到群聊
     def text_to_chatroom(self):
         #print("执行：text_to_chatroom")
         text_send = self.textEdit_text_chatroom.toPlainText()
         text_chatroom = self.lineEdit_text_chatroom.text()
-        search_username = itchat.search_chatrooms(text_chatroom)
-        if search_username:
-            text_username = search_username[0]['UserName']
-            itchat.send(text_send, toUserName=text_username)
-            self.output_info("成功发送文字至：[%s]" % text_chatroom)
-            fromChatroom = True
-            message = "Python → " + text_chatroom + "：" + text_send
-            send_time = time.time()
-            self.write_log(fromChatroom,message, send_time)
+        if text_chatroom == '':
+            self.output_info("您还没有输入群聊名称！")
         else:
-            self.output_info("群聊名称出错了！")
+            search_username = itchat.search_chatrooms(text_chatroom)
+            if search_username:
+                text_username = search_username[0]['UserName']
+                itchat.send(text_send, toUserName=text_username)
+                self.output_info("成功发送文字至群聊：%s" % text_chatroom)
+                fromChatroom = True
+                message = "Python → " + text_chatroom + "：" + text_send
+                send_time = time.time()
+                self.write_log(fromChatroom,message, send_time)
+            else:
+                self.output_info("找不到该群聊!")
 
     # 选择要发送的文件
     def open_file(self):
@@ -194,25 +200,31 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
     # 发送文件到好友
     def file_to_friend(self):
         file_friend = self.lineEdit_file_friend.text()
-        search_username = itchat.search_friends(file_friend)
-        if search_username:
-            file_username = search_username[0]['UserName']      #用户ID，一长串数字，用于发消息
-            file_nickname = search_username[0]['NickName']      #用户昵称
-            self.file_to_who(file_username)
-            self.output_info("成功发送文件至：%s" % file_nickname)
+        if file_friend == '':
+            self.output_info("您还没有输入好友昵称！")
         else:
-            self.output_info("好友昵称出错了！")
+            search_username = itchat.search_friends(file_friend)
+            if search_username:
+                file_username = search_username[0]['UserName']      #用户ID，一长串数字，用于发消息
+                file_nickname = search_username[0]['NickName']      #用户昵称
+                self.file_to_who(file_username)
+                self.output_info("成功发送文件至好友：%s" % file_nickname)
+            else:
+                self.output_info("找不到该好友！")
 
     # 发送文件到群聊
     def file_to_chatroom(self):
         file_chatroom = self.lineEdit_file_chatroom.text()
-        search_username = itchat.search_chatrooms(file_chatroom)
-        if search_username:
-            file_username = search_username[0]['UserName']
-            self.file_to_who(file_username)
-            self.output_info("成功发送文件至：群聊[%s]" % file_chatroom)
+        if file_chatroom == '':
+            self.output_info("您还没有输入群聊名称！")
         else:
-            self.output_info("群聊名称出错了！")
+            search_username = itchat.search_chatrooms(file_chatroom)
+            if search_username:
+                file_username = search_username[0]['UserName']
+                self.file_to_who(file_username)
+                self.output_info("成功发送文件至群聊：%s" % file_chatroom)
+            else:
+                self.output_info("找不到该群聊！")
 
 
 ###############################################################################
@@ -273,7 +285,6 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
 
 
 
-
 #########################################################################################################
 # 线程
 #########################################################################################################
@@ -291,7 +302,7 @@ class MyThread(QtCore.QThread):
     def run(self):
         itchat.auto_login()
         userInfo = itchat.web_init()
-        self._signal_2.emit('成功登陆! 账号： %s' % userInfo['User']['NickName'])
+        self._signal_2.emit('成功登陆！账号：%s' % userInfo['User']['NickName'])
         self._signal_2.emit('准备就绪，可以关闭二维码了！')
         itchat.run()
 
@@ -318,16 +329,17 @@ def get_msg(msg):
             to_Name = msg['User'].get('NickName')
     elif msg['ToUserName'] == myUserName:
         # 这是别人发给我的
-        if reply_busy == True:  # 自动回复
-            msg_busy = myshow.lineEdit_busy.text()
-            itchat.send('[自动回复] %s' % msg_busy, msg['FromUserName'])
-        if reply_robot == True:   # 机器人回复
-            itchat.send('[机器人回复] %s' % myshow.tuling(msg['Text']), msg['FromUserName'])
         to_Name = '我'
         if msg['FromUserName'] == 'filehelper':
             from_Name = '助手'
         else:
             from_Name = msg['User'].get('NickName')
+
+        if reply_busy == True:  # 自动回复
+            msg_busy = myshow.lineEdit_busy.text()
+            itchat.send('[自动回复] %s' % msg_busy, msg['FromUserName'])
+        if reply_robot == True:   # 机器人回复
+            itchat.send('[机器人回复] %s' % myshow.tuling(msg['Text']), msg['FromUserName'])     
     message = from_Name + ' → ' + to_Name + '：' + str(msg['Text'])
     send_time = msg['CreateTime']
     myshow.thread._signal_1.emit(fromChatroom,message, send_time)       # 信号焕发，连接 write_log
@@ -348,21 +360,22 @@ def download_files(msg):
     elif msg['ToUserName'] == myUserName:
         # 这是别人发给我的
         to_Name = '我'
-        if reply_busy == True:
-            msg_busy = myshow.lineEdit_busy.text()
-            itchat.send('[自动回复] %s' % msg_busy, msg['FromUserName'])
-        if reply_robot == True:
-            itchat.send('[机器人回复] %s' % myshow.tuling(msg['Text']), msg['FromUserName'])
         if msg['FromUserName'] == 'filehelper':
             from_Name = '助手'
         else:
             from_Name = msg['User'].get('NickName')
+
+        if reply_busy == True:
+            msg_busy = myshow.lineEdit_busy.text()
+            itchat.send('[自动回复] %s' % msg_busy, msg['FromUserName'])
+        if reply_robot == True:
+            itchat.send('[机器人回复] %s' % myshow.tuling(msg['Text']), msg['FromUserName'])       
     # 新建接收文件夹
     isExists=os.path.exists("接收文件") 
     if not isExists:
         os.makedirs("接收文件")
     os.chdir("接收文件")
-    msg.download(msg.fileName)	# 下载文件
+    msg.download(msg.fileName)  # 下载文件
     os.chdir("..")
     message =  from_Name + ' → ' + to_Name + '：'+ '[文件: %s]'%msg['FileName']
     send_time = msg['CreateTime']
@@ -382,7 +395,6 @@ def get_msg_at(msg):
         message = from_Name + ' @ 我' + '：' + str(msg['Text'])
         send_time = msg['CreateTime']
         myshow.thread._signal_1.emit(fromChatroom,message, send_time)       # 信号焕发，连接 write_log
-
 
 
 
@@ -419,13 +431,13 @@ def wechat_do(do_what):
         elif '控制@' in do_what:
             more_cmd(do_cmd)  # 执行更多cmd命令
         elif '忙碌回复@开' in do_what:
-            reply_busy_on()	  # 打开忙碌回复
+            reply_busy_on()   # 打开忙碌回复
         elif '忙碌回复@关' in do_what:
-            reply_busy_off()	  # 打开忙碌回复
+            reply_busy_off()      # 打开忙碌回复
         elif '机器人回复@开' in do_what:
-            reply_robot_on()	  # 打开忙碌回复
+            reply_robot_on()      # 打开忙碌回复
         elif '机器人回复@关' in do_what:
-            reply_robot_off()	  # 打开忙碌回复
+            reply_robot_off()     # 打开忙碌回复
 
 
 
@@ -456,7 +468,7 @@ def img_to_myself():
     now_time =  time.strftime("%y/%m/%d %H:%M:%S", timeArray)
     time_msg = '时间: [%s]' % now_time
     # 需要用时间来命名图片,所以时间信息中不能有/和:,否则报错;也不能带空格,否则发送时会报错
-    filename_time = time.strftime("%y%m%d-%H%M%S", timeArray)	
+    filename_time = time.strftime("%y%m%d-%H%M%S", timeArray)   
     img_name = filename_time + '.png'
     # 新建截图文件夹
     isExists=os.path.exists("截图文件")
@@ -555,7 +567,7 @@ def reply_busy_on():
     '''打开忙碌回复'''
     myshow.checkBox_busy.setChecked(True)
     reply_busy = True
-    send_msg = '[远控信息] 已打开忙碌回复'
+    send_msg = '[远控信息] 已打开忙碌回复功能'
     itchat.send(send_msg, toUserName='filehelper')
     myshow.thread._signal_3.emit(send_msg)
 
@@ -564,7 +576,7 @@ def reply_busy_off():
     '''关闭忙碌回复'''
     myshow.checkBox_busy.setChecked(False)
     reply_busy = False
-    send_msg = '[远控信息] 已关闭忙碌回复'
+    send_msg = '[远控信息] 已关闭忙碌回复功能'
     itchat.send(send_msg, toUserName='filehelper')
     myshow.thread._signal_3.emit(send_msg)
 
@@ -572,7 +584,7 @@ def reply_robot_on():
     '''打开机器人回复'''
     myshow.checkBox_robot.setChecked(True)
     reply_robot = True
-    send_msg = '[远控信息] 已打开机器人回复'
+    send_msg = '[远控信息] 已打开机器人回复功能'
     itchat.send(send_msg, toUserName='filehelper')
     myshow.thread._signal_3.emit(send_msg)
 
@@ -580,7 +592,7 @@ def reply_robot_off():
     '''关闭机器人回复'''
     myshow.checkBox_robot.setChecked(False)
     reply_robot = False
-    send_msg = '[远控信息] 已关闭机器人回复'
+    send_msg = '[远控信息] 已关闭机器人回复功能'
     itchat.send(send_msg, toUserName='filehelper')
     myshow.thread._signal_3.emit(send_msg)
 
@@ -621,7 +633,7 @@ if __name__ == "__main__":
     # 不调用show不会显示系统托盘
     tp.show()
     # 托盘信息提示,参数1：标题,参数2：内容,参数3：图标（0没有图标 1信息图标 2警告图标 3错误图标），0还是有一个小图标
-    tp.showMessage('MineWechat','关闭程序窗口, 我依然在这里!',icon=0)
+    tp.showMessage('MineWechat','关闭程序窗口，我依然在这里！',icon=0)
     # 鼠标点击托盘图标
     def act(reason):
         # 鼠标点击icon传递的信号会带有一个整形的值，1是表示单击右键，2是双击，3是单击左键，4是用鼠标中键点击
@@ -629,3 +641,4 @@ if __name__ == "__main__":
             myshow.show()
     tp.activated.connect(act)
     sys.exit(app.exec_())
+    
