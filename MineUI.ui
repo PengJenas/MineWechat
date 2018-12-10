@@ -516,7 +516,7 @@
        <string>忙碌回复</string>
       </property>
      </widget>
-     <widget class="QCheckBox" name="checkBox_bot">
+     <widget class="QCheckBox" name="checkBox_robot">
       <property name="geometry">
        <rect>
         <x>30</x>
