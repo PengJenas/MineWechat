@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Author: Jenas
+# Version: V3.1.2
 
 import os
 import time
@@ -51,7 +52,7 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         # 复选框
         self.checkBox_remote.setChecked(True)   # 默认勾选
         self.checkBox_busy.stateChanged.connect(self.check_busy) 
-        self.checkBox_bot.stateChanged.connect(self.check_bot)
+        self.checkBox_robot.stateChanged.connect(self.check_robot)
         self.checkBox_remote.stateChanged.connect(self.check_remote)
 
 
@@ -231,16 +232,16 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
             reply_busy = False
 
     # 微信机器人回复功能开关
-    def check_bot(self):
-        check_state = self.checkBox_bot.checkState()
+    def check_robot(self):
+        check_state = self.checkBox_robot.checkState()
         #print(check_state)
-        global reply_bot
+        global reply_robot
         if check_state == QtCore.Qt.Checked:
             self.output_info('已打开[机器人回复]功能')
-            reply_bot =True
+            reply_robot =True
         elif check_state == QtCore.Qt.Unchecked:
             self.output_info('已关闭[机器人回复]功能')
-            reply_bot = False
+            reply_robot = False
 
     # 调用图灵机器人的api，利用爬虫，根据聊天消息返回回复内容
     def tuling(self,info):
@@ -296,7 +297,6 @@ class MyThread(QtCore.QThread):
 
 
 
-
 #########################################################################################################
 # 处理微信信息
 #########################################################################################################
@@ -321,7 +321,7 @@ def get_msg(msg):
         if reply_busy == True:  # 自动回复
             msg_busy = myshow.lineEdit_busy.text()
             itchat.send('[自动回复] %s' % msg_busy, msg['FromUserName'])
-        if reply_bot == True:   # 机器人回复
+        if reply_robot == True:   # 机器人回复
             itchat.send('[机器人回复] %s' % myshow.tuling(msg['Text']), msg['FromUserName'])
         to_Name = '我'
         if msg['FromUserName'] == 'filehelper':
@@ -343,23 +343,28 @@ def download_files(msg):
         from_Name = '我'
         if msg['ToUserName'] == 'filehelper':
             to_Name = '助手'
-            msg.download(msg.fileName)  # 下载文件
         else:
             to_Name = msg['User'].get('NickName')
     elif msg['ToUserName'] == myUserName:
         # 这是别人发给我的
-        msg.download(msg.fileName)      # 下载文件
+        to_Name = '我'
         if reply_busy == True:
             msg_busy = myshow.lineEdit_busy.text()
             itchat.send('[自动回复] %s' % msg_busy, msg['FromUserName'])
-        if reply_bot == True:
+        if reply_robot == True:
             itchat.send('[机器人回复] %s' % myshow.tuling(msg['Text']), msg['FromUserName'])
-        to_Name = '我'
         if msg['FromUserName'] == 'filehelper':
             from_Name = '助手'
         else:
             from_Name = msg['User'].get('NickName')
-    message =  from_Name + ' → ' + to_Name + '：'+ '[文件：%s]'%msg['FileName']
+    # 新建接收文件夹
+    isExists=os.path.exists("接收文件") 
+    if not isExists:
+	    os.makedirs("接收文件")
+    os.chdir("接收文件")
+    msg.download(msg.fileName)	# 下载文件
+    os.chdir("..")
+    message =  from_Name + ' → ' + to_Name + '：'+ '[文件: %s]'%msg['FileName']
     send_time = msg['CreateTime']
     myshow.thread._signal_1.emit(fromChatroom, message, send_time)      # 信号焕发，连接 write_log
 
@@ -370,7 +375,7 @@ def get_msg_at(msg):
         if reply_busy == True:
             msg_busy = myshow.lineEdit_busy.text()
             itchat.send(u'@%s\u2005[自动回复] %s' % (msg['ActualNickName'], msg_busy), msg['FromUserName'])
-        if reply_bot == True:
+        if reply_robot == True:
             itchat.send(u'@%s\u2005[机器人回复] %s' % (msg['ActualNickName'],myshow.tuling(msg['Text'])), msg['FromUserName'])
         from_Name = msg['ActualNickName']
         fromChatroom = True
@@ -384,12 +389,6 @@ def get_msg_at(msg):
 #########################################################################################################
 # 微信远程控制
 #########################################################################################################
-
-def get_now_time(self):     
-    now_time = time.strftime("%y/%m/%d %H:%M:%S", time.localtime(time.time()))
-    time_msg = '[%s]' % now_time
-    return time_msg
-
 
 def wechat_do(do_what):
     '''判断并执行具体指令，格式为：命令@参数'''
@@ -419,6 +418,15 @@ def wechat_do(do_what):
             open_web(do_cmd)  # 打开网页
         elif '控制@' in do_what:
             more_cmd(do_cmd)  # 执行更多cmd命令
+        elif '忙碌回复@开' in do_what:
+        	reply_busy_on()	  # 打开忙碌回复
+        elif '忙碌回复@关' in do_what:
+        	reply_busy_off()	  # 打开忙碌回复
+        elif '机器人回复@开' in do_what:
+        	reply_robot_on()	  # 打开忙碌回复
+        elif '机器人回复@关' in do_what:
+        	reply_robot_off()	  # 打开忙碌回复
+
 
 
 def read_me():
@@ -435,15 +443,30 @@ def read_me():
     readme_msg += r'#控制@explorer c:\windows'+'\n'
     readme_msg += '#最小化窗口\n'
     readme_msg += '#切换窗口\n'
+    readme_msg += '#忙碌回复@开\n'
+    readme_msg += '#忙碌回复@关\n'
+    readme_msg += '#机器人回复@开\n'
+    readme_msg += '#机器人回复@关\n'
     itchat.send(readme_msg, toUserName='filehelper')        # 发送帮助信息
     myshow.thread._signal_3.emit('[远控信息] 已发送帮助信息')
 
 def img_to_myself():
-    '''本机截图'''
-    ImageGrab.grab().save('sc_img.png')  # 截图并保存
-    itchat.send_image('sc_img.png', toUserName='filehelper')  # 微信发送截图给自己
-    send_msg = myshow.get_now_time()  # 执行函数，时间信息
-    itchat.send(send_msg, toUserName='filehelper')  # 发送消息，截图时间
+    '''截图并发送'''
+    timeArray = time.localtime(time.time())
+    now_time =  time.strftime("%y/%m/%d %H:%M:%S", timeArray)
+    time_msg = '时间: [%s]' % now_time
+    # 需要用时间来命名图片,所以时间信息中不能有/和:,否则报错;也不能带空格,否则发送时会报错
+    filename_time = time.strftime("%y%m%d-%H%M%S", timeArray)	
+    img_name = filename_time + '.png'
+    # 新建截图文件夹
+    isExists=os.path.exists("截图文件")
+    if not isExists:
+    	os.makedirs("截图文件") 
+    os.chdir("截图文件")
+    ImageGrab.grab().save(img_name)  # 截图并保存
+    itchat.send_image(img_name, toUserName='filehelper')  # 微信发送截图给自己
+    os.chdir("..")
+    itchat.send(time_msg, toUserName='filehelper')  # 发送消息，截图时间
     myshow.thread._signal_3.emit('[远控信息] 已发送截图')
 
 def shutdown_pc():
@@ -528,6 +551,27 @@ def send_alt_tab():
     itchat.send(send_msg, toUserName='filehelper')
     myshow.thread._signal_3.emit('[远控信息] 已切换程序窗口')
 
+def reply_busy_on():
+	'''打开忙碌回复'''
+	myshow.checkBox_busy.setChecked(True)
+	reply_busy = True
+
+def reply_busy_off():
+	'''关闭忙碌回复'''
+	myshow.checkBox_busy.setChecked(False)
+	reply_busy = False
+
+def reply_robot_on():
+	'''打开机器人回复'''
+	myshow.checkBox_robot.setChecked(True)
+	reply_robot = True
+
+def reply_robot_off():
+	'''关闭机器人回复'''
+	myshow.checkBox_robot.setChecked(False)
+	reply_robot = False
+
+
 
 
 #########################################################################################################
@@ -542,7 +586,7 @@ if __name__ == "__main__":
     myshow.show()
     # 自动回复等功能选项默认开关
     reply_busy = False
-    reply_bot = False
+    reply_robot = False
     remote_pc = True
 
 
