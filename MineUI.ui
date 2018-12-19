@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>708</height>
+    <width>824</width>
+    <height>695</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,48 +23,22 @@
   <widget class="QGroupBox" name="groupBox_login">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>530</y>
-     <width>561</width>
-     <height>161</height>
+     <x>225</x>
+     <y>589</y>
+     <width>581</width>
+     <height>88</height>
     </rect>
    </property>
    <property name="title">
-    <string>系统</string>
+    <string>系统信息</string>
    </property>
-   <widget class="QPushButton" name="pushButton_logout">
-    <property name="geometry">
-     <rect>
-      <x>300</x>
-      <y>31</y>
-      <width>241</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>注销微信</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_login">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>31</y>
-      <width>241</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>扫码登录</string>
-    </property>
-   </widget>
    <widget class="QTextEdit" name="textEdit_output">
     <property name="geometry">
      <rect>
-      <x>21</x>
-      <y>70</y>
-      <width>521</width>
-      <height>74</height>
+      <x>1</x>
+      <y>18</y>
+      <width>580</width>
+      <height>70</height>
      </rect>
     </property>
    </widget>
@@ -72,14 +46,14 @@
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
     <rect>
-     <x>19</x>
-     <y>19</y>
-     <width>561</width>
-     <height>491</height>
+     <x>225</x>
+     <y>10</y>
+     <width>581</width>
+     <height>571</height>
     </rect>
    </property>
    <property name="currentIndex">
-    <number>4</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="chat_friend">
     <attribute name="title">
@@ -88,10 +62,10 @@
     <widget class="QGroupBox" name="groupBox_friend_record">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>20</y>
-       <width>511</width>
-       <height>221</height>
+       <x>13</x>
+       <y>8</y>
+       <width>550</width>
+       <height>300</height>
       </rect>
      </property>
      <property name="title">
@@ -100,10 +74,10 @@
      <widget class="QTextEdit" name="textEdit_friend_record">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>20</y>
-        <width>471</width>
-        <height>180</height>
+        <x>0</x>
+        <y>18</y>
+        <width>550</width>
+        <height>282</height>
        </rect>
       </property>
      </widget>
@@ -111,10 +85,10 @@
     <widget class="QGroupBox" name="groupBox_text_friend">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>250</y>
-       <width>511</width>
-       <height>201</height>
+       <x>13</x>
+       <y>340</y>
+       <width>550</width>
+       <height>191</height>
       </rect>
      </property>
      <property name="title">
@@ -123,45 +97,32 @@
      <widget class="QTextEdit" name="textEdit_text_friend">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>20</y>
-        <width>471</width>
-        <height>81</height>
+        <x>1</x>
+        <y>18</y>
+        <width>549</width>
+        <height>80</height>
        </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_text_helper">
-      <property name="geometry">
-       <rect>
-        <x>22</x>
-        <y>121</y>
-        <width>60</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>文件助手：</string>
       </property>
      </widget>
      <widget class="QPushButton" name="pushButton_text_friend">
       <property name="geometry">
        <rect>
         <x>280</x>
-        <y>154</y>
-        <width>211</width>
+        <y>150</y>
+        <width>261</width>
         <height>23</height>
        </rect>
       </property>
       <property name="text">
-       <string>发给好友</string>
+       <string>发送至好友</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="lineEdit_text_friend">
       <property name="geometry">
        <rect>
-        <x>80</x>
-        <y>155</y>
-        <width>171</width>
+        <x>90</x>
+        <y>120</y>
+        <width>451</width>
         <height>20</height>
        </rect>
       </property>
@@ -169,9 +130,9 @@
      <widget class="QPushButton" name="pushButton_text_helper">
       <property name="geometry">
        <rect>
-        <x>80</x>
-        <y>121</y>
-        <width>411</width>
+        <x>10</x>
+        <y>150</y>
+        <width>261</width>
         <height>23</height>
        </rect>
       </property>
@@ -182,9 +143,9 @@
      <widget class="QLabel" name="label_text_friend">
       <property name="geometry">
        <rect>
-        <x>22</x>
-        <y>155</y>
-        <width>60</width>
+        <x>10</x>
+        <y>122</y>
+        <width>71</width>
         <height>16</height>
        </rect>
       </property>
@@ -201,10 +162,10 @@
     <widget class="QGroupBox" name="groupBox_text_chatroom">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>250</y>
-       <width>511</width>
-       <height>201</height>
+       <x>13</x>
+       <y>340</y>
+       <width>550</width>
+       <height>190</height>
       </rect>
      </property>
      <property name="title">
@@ -213,19 +174,19 @@
      <widget class="QTextEdit" name="textEdit_text_chatroom">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>20</y>
-        <width>471</width>
-        <height>81</height>
+        <x>1</x>
+        <y>18</y>
+        <width>549</width>
+        <height>82</height>
        </rect>
       </property>
      </widget>
      <widget class="QPushButton" name="pushButton_text_chatroom">
       <property name="geometry">
        <rect>
-        <x>280</x>
-        <y>121</y>
-        <width>211</width>
+        <x>10</x>
+        <y>150</y>
+        <width>530</width>
         <height>23</height>
        </rect>
       </property>
@@ -236,9 +197,9 @@
      <widget class="QLineEdit" name="lineEdit_text_chatroom">
       <property name="geometry">
        <rect>
-        <x>88</x>
-        <y>121</y>
-        <width>171</width>
+        <x>90</x>
+        <y>120</y>
+        <width>450</width>
         <height>20</height>
        </rect>
       </property>
@@ -246,9 +207,9 @@
      <widget class="QLabel" name="label_text_chatroom">
       <property name="geometry">
        <rect>
-        <x>22</x>
-        <y>121</y>
-        <width>60</width>
+        <x>10</x>
+        <y>122</y>
+        <width>71</width>
         <height>16</height>
        </rect>
       </property>
@@ -260,10 +221,10 @@
     <widget class="QGroupBox" name="groupBox_chatroom_record">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>20</y>
-       <width>511</width>
-       <height>221</height>
+       <x>13</x>
+       <y>8</y>
+       <width>550</width>
+       <height>300</height>
       </rect>
      </property>
      <property name="title">
@@ -272,10 +233,10 @@
      <widget class="QTextEdit" name="textEdit_chatroom_record">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>20</y>
-        <width>471</width>
-        <height>180</height>
+        <x>0</x>
+        <y>18</y>
+        <width>550</width>
+        <height>282</height>
        </rect>
       </property>
      </widget>
@@ -288,10 +249,10 @@
     <widget class="QGroupBox" name="groupBox_file_dir">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>20</y>
-       <width>511</width>
-       <height>101</height>
+       <x>13</x>
+       <y>180</y>
+       <width>550</width>
+       <height>111</height>
       </rect>
      </property>
      <property name="title">
@@ -300,9 +261,9 @@
      <widget class="QLineEdit" name="lineEdit_file_dir">
       <property name="geometry">
        <rect>
-        <x>87</x>
-        <y>60</y>
-        <width>403</width>
+        <x>90</x>
+        <y>70</y>
+        <width>450</width>
         <height>20</height>
        </rect>
       </property>
@@ -310,9 +271,9 @@
      <widget class="QLabel" name="label_file_dir">
       <property name="geometry">
        <rect>
-        <x>21</x>
-        <y>60</y>
-        <width>60</width>
+        <x>10</x>
+        <y>70</y>
+        <width>81</width>
         <height>16</height>
        </rect>
       </property>
@@ -323,9 +284,9 @@
      <widget class="QPushButton" name="pushButton_open_file">
       <property name="geometry">
        <rect>
-        <x>21</x>
+        <x>10</x>
         <y>30</y>
-        <width>471</width>
+        <width>530</width>
         <height>23</height>
        </rect>
       </property>
@@ -337,34 +298,21 @@
     <widget class="QGroupBox" name="groupBox_file_send">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>150</y>
-       <width>511</width>
-       <height>131</height>
+       <x>13</x>
+       <y>300</y>
+       <width>550</width>
+       <height>231</height>
       </rect>
      </property>
      <property name="title">
       <string>发送文件</string>
      </property>
-     <widget class="QLabel" name="label_file_helper">
-      <property name="geometry">
-       <rect>
-        <x>27</x>
-        <y>31</y>
-        <width>60</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>文件助手：</string>
-      </property>
-     </widget>
      <widget class="QLineEdit" name="lineEdit_file_chatroom">
       <property name="geometry">
        <rect>
-        <x>93</x>
-        <y>91</y>
-        <width>181</width>
+        <x>90</x>
+        <y>160</y>
+        <width>450</width>
         <height>20</height>
        </rect>
       </property>
@@ -372,9 +320,9 @@
      <widget class="QLabel" name="label_file_friend">
       <property name="geometry">
        <rect>
-        <x>27</x>
-        <y>61</y>
-        <width>60</width>
+        <x>10</x>
+        <y>80</y>
+        <width>71</width>
         <height>16</height>
        </rect>
       </property>
@@ -385,9 +333,9 @@
      <widget class="QLineEdit" name="lineEdit_file_friend">
       <property name="geometry">
        <rect>
-        <x>93</x>
-        <y>61</y>
-        <width>181</width>
+        <x>90</x>
+        <y>80</y>
+        <width>450</width>
         <height>20</height>
        </rect>
       </property>
@@ -395,9 +343,9 @@
      <widget class="QPushButton" name="pushButton_file_friend">
       <property name="geometry">
        <rect>
-        <x>290</x>
-        <y>60</y>
-        <width>201</width>
+        <x>10</x>
+        <y>110</y>
+        <width>530</width>
         <height>23</height>
        </rect>
       </property>
@@ -408,9 +356,9 @@
      <widget class="QLabel" name="label_file_chatroom">
       <property name="geometry">
        <rect>
-        <x>27</x>
-        <y>91</y>
-        <width>60</width>
+        <x>10</x>
+        <y>160</y>
+        <width>71</width>
         <height>16</height>
        </rect>
       </property>
@@ -421,9 +369,9 @@
      <widget class="QPushButton" name="pushButton_file_chatroom">
       <property name="geometry">
        <rect>
-        <x>290</x>
-        <y>90</y>
-        <width>201</width>
+        <x>10</x>
+        <y>190</y>
+        <width>530</width>
         <height>23</height>
        </rect>
       </property>
@@ -434,14 +382,37 @@
      <widget class="QPushButton" name="pushButton_file_helper">
       <property name="geometry">
        <rect>
-        <x>93</x>
+        <x>10</x>
         <y>30</y>
-        <width>399</width>
+        <width>530</width>
         <height>23</height>
        </rect>
       </property>
       <property name="text">
        <string>发送至文件传输助手</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_send_record">
+     <property name="geometry">
+      <rect>
+       <x>13</x>
+       <y>8</y>
+       <width>551</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>发送记录</string>
+     </property>
+     <widget class="QTextEdit" name="textEdit_send_record">
+      <property name="geometry">
+       <rect>
+        <x>1</x>
+        <y>18</y>
+        <width>549</width>
+        <height>133</height>
+       </rect>
       </property>
      </widget>
     </widget>
@@ -453,10 +424,10 @@
     <widget class="QGroupBox" name="groupBox_remote">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>20</y>
-       <width>511</width>
-       <height>421</height>
+       <x>13</x>
+       <y>8</y>
+       <width>550</width>
+       <height>521</height>
       </rect>
      </property>
      <property name="title">
@@ -465,10 +436,10 @@
      <widget class="QCheckBox" name="checkBox_remote">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>20</y>
+        <x>20</x>
+        <y>25</y>
         <width>441</width>
-        <height>16</height>
+        <height>17</height>
        </rect>
       </property>
       <property name="text">
@@ -478,10 +449,10 @@
      <widget class="QTextEdit" name="textEdit_remote">
       <property name="geometry">
        <rect>
-        <x>20</x>
+        <x>1</x>
         <y>50</y>
-        <width>471</width>
-        <height>351</height>
+        <width>549</width>
+        <height>471</height>
        </rect>
       </property>
      </widget>
@@ -494,10 +465,10 @@
     <widget class="QGroupBox" name="groupBox_option">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>10</y>
-       <width>511</width>
-       <height>421</height>
+       <x>13</x>
+       <y>8</y>
+       <width>550</width>
+       <height>521</height>
       </rect>
      </property>
      <property name="title">
@@ -508,8 +479,8 @@
        <rect>
         <x>30</x>
         <y>30</y>
-        <width>71</width>
-        <height>16</height>
+        <width>111</width>
+        <height>17</height>
        </rect>
       </property>
       <property name="text">
@@ -521,8 +492,8 @@
        <rect>
         <x>30</x>
         <y>90</y>
-        <width>91</width>
-        <height>16</height>
+        <width>101</width>
+        <height>17</height>
        </rect>
       </property>
       <property name="text">
@@ -532,9 +503,9 @@
      <widget class="QLineEdit" name="lineEdit_busy">
       <property name="geometry">
        <rect>
-        <x>110</x>
+        <x>150</x>
         <y>50</y>
-        <width>381</width>
+        <width>361</width>
         <height>20</height>
        </rect>
       </property>
@@ -544,7 +515,7 @@
        <rect>
         <x>30</x>
         <y>50</y>
-        <width>81</width>
+        <width>101</width>
         <height>20</height>
        </rect>
       </property>
@@ -554,6 +525,119 @@
      </widget>
     </widget>
    </widget>
+   <widget class="QWidget" name="help">
+    <attribute name="title">
+     <string>帮助信息</string>
+    </attribute>
+    <widget class="QGroupBox" name="groupBox_help">
+     <property name="geometry">
+      <rect>
+       <x>13</x>
+       <y>8</y>
+       <width>550</width>
+       <height>520</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>帮助信息</string>
+     </property>
+     <widget class="QTextEdit" name="textEdit_help">
+      <property name="geometry">
+       <rect>
+        <x>1</x>
+        <y>18</y>
+        <width>549</width>
+        <height>502</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QToolBox" name="toolBox">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>10</y>
+     <width>200</width>
+     <height>570</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>1</number>
+   </property>
+   <widget class="QWidget" name="page_1">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>200</width>
+      <height>510</height>
+     </rect>
+    </property>
+    <attribute name="label">
+     <string>好友列表</string>
+    </attribute>
+    <widget class="QListView" name="listView_friend">
+     <property name="geometry">
+      <rect>
+       <x>-1</x>
+       <y>-1</y>
+       <width>200</width>
+       <height>511</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="page_2">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>200</width>
+      <height>510</height>
+     </rect>
+    </property>
+    <attribute name="label">
+     <string>群聊列表</string>
+    </attribute>
+    <widget class="QListView" name="listView_chatroom">
+     <property name="geometry">
+      <rect>
+       <x>-1</x>
+       <y>-1</y>
+       <width>200</width>
+       <height>511</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="pushButton_login">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>610</y>
+     <width>180</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>扫码登录</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_logout">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>650</y>
+     <width>180</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>注销退出</string>
+   </property>
   </widget>
  </widget>
  <resources>
