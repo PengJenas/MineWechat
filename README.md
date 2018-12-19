@@ -18,6 +18,7 @@
 - 2018/12/19  更新v3.5.3
   - 1.更新了UI,变换了风格
   - 2.添加了好友列表
+  - 3.支持Ctrl,Shift多选好友,群发小心
 
 - 2018/12/10  更新v3.1.2
   - 1.优化代码(也许Bug也更多了)
@@ -44,11 +45,10 @@
   - 5.程序图标来自网络，侵删
 
 ## 软件截图
-![img1](https://attach.52pojie.cn/forum/201809/22/184703di1k77bc3wno713o.png)
-![img2](https://attach.52pojie.cn/forum/201809/22/184703x8z1kwm12kzd0ftd.png)
-![img3](https://attach.52pojie.cn/forum/201809/22/184702w55mgut3mt055td5.png)
-![img4](https://attach.52pojie.cn/forum/201809/22/184829ned968o3f33m28z4.png)
-![img5](https://attach.52pojie.cn/forum/201809/22/185625ch8ysripyiwveiyh.png)
+![1.png](https://i.loli.net/2018/12/19/5c19fa5eb02c6.png)
+![2.png](https://i.loli.net/2018/12/19/5c19fa5f40506.png)
+![3.png](https://i.loli.net/2018/12/19/5c19fb8c78d32.png)
+![4.png](https://i.loli.net/2018/12/19/5c19fb8cc7a0b.png)
 
 
 ## 软件使用
