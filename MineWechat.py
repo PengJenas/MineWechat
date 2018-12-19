@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Author: Jenas
-# Version: V3.1.2
+
 
 import os
 import time
@@ -11,9 +11,10 @@ import imghdr    # 识别图像格式
 import requests,json    # 爬机器人回复
 import itchat    # 微信库
 from itchat.content import *
-from PyQt5 import QtCore, QtGui, QtWidgets    # PYQT5
+from PyQt5 import QtCore, QtGui, QtWidgets
 from MineUI import Ui_Form    # 程序UI
 import img_rc    # 程序图标文件
+from pypinyin import lazy_pinyin
 
 
 #########################################################################################################
@@ -24,12 +25,17 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
     def __init__(self):                             
         super(MyWindow, self).__init__()
         self.setupUi(self)
-        # 初始化标签、文本框提示
-        self.output_info("点击“扫码登录”按钮！")
-        self.textEdit_text_friend.setText("输入信息：")
-        self.textEdit_text_chatroom.setText("可以@群里的某个人")
-        self.textEdit_remote.setText("[帮助信息]手机端微信编辑“#帮助”发送至“文件传输助手”")
+        QtWidgets.QApplication.setStyle(QtWidgets.QStyleFactory.create('Fusion'))   # 风格
+        # 初始化标签、文本框提示,禁用不需要输入的文本框
+        self.output_info("请点击左侧的“扫码登录”按钮！")
+        #self.textEdit_text_friend.setText("输入信息：")
+        self.textEdit_text_chatroom.setText("可以@群里的某人")
         self.lineEdit_busy.setText("您好，我现在忙，不方便回复您！有事请留言！[微笑]")
+        self.lineEdit_text_friend.setEnabled(False)
+        self.lineEdit_text_chatroom.setEnabled(False)
+        self.lineEdit_file_dir.setEnabled(False)
+        self.lineEdit_file_friend.setEnabled(False)
+        self.lineEdit_file_chatroom.setEnabled(False)
         # 按钮
         self.pushButton_login.clicked.connect(self.login)
         self.pushButton_logout.clicked.connect(self.logout)
@@ -40,8 +46,14 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         self.pushButton_file_helper.clicked.connect(self.file_to_helper)
         self.pushButton_file_friend.clicked.connect(self.file_to_friend)
         self.pushButton_file_chatroom.clicked.connect(self.file_to_chatroom)
+        # 复选框
+        self.checkBox_remote.setChecked(True)   # 默认勾选
+        self.checkBox_busy.stateChanged.connect(self.check_busy) 
+        self.checkBox_robot.stateChanged.connect(self.check_robot)
+        self.checkBox_remote.stateChanged.connect(self.check_remote)
+
         # 登陆微信前,使按钮失效  
-        self.pushButton_logout.setEnabled(False)         
+        #self.pushButton_logout.setEnabled(False)         
         self.pushButton_text_helper.setEnabled(False)
         self.pushButton_text_friend.setEnabled(False)
         self.pushButton_text_chatroom.setEnabled(False)
@@ -49,39 +61,53 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         self.pushButton_file_helper.setEnabled(False)
         self.pushButton_file_friend.setEnabled(False)
         self.pushButton_file_chatroom.setEnabled(False)
-        # 复选框
-        self.checkBox_remote.setChecked(True)   # 默认勾选
-        self.checkBox_busy.stateChanged.connect(self.check_busy) 
-        self.checkBox_robot.stateChanged.connect(self.check_robot)
-        self.checkBox_remote.stateChanged.connect(self.check_remote)
+
+        # 提示信息
+        text_help = '====== ★ 感谢使用 MineWechat V3.5.2 ★ ======  By Jenas\n\n'
+        text_help += '1. 作者是新手，程序尚有很多Bug，请多包涵，欢迎反馈！\n\n'
+        text_help += '2. 好友、群聊列表支持 Ctrl、Shift 多选，双击清空选择。\n\n'
+        text_help += '3. 获取微信远控指令：手机微信编辑“#帮助”发送至“文件传输助手”。\n\n'
+        text_help += '4. 发送文件的文件名不可以是中文，但路径可以是中文。\n\n'
+        text_help += '5. 锁定屏幕会导致部分功能失效，所以，挂机的话请关闭睡眠和锁屏。\n\n'
+        text_help += '6. 想起来再补……'
+        self.textEdit_help.setText(text_help)
 
 
 ############################################################################################
-# 底部系统,包含：登陆、注销、系统信息
+# 包含：登陆、注销、系统信息、好友列表
 ############################################################################################
 
-    # 获取当前时间戳,并转格式,外面再套上方括号
-    # 就像这样：[18/09/17 18:12:38]
+    # 获取当前时间戳,并转格式,外面再套上方括号，就像这样：[18/09/17 18:12:38]
     def get_now_time(self):     
-        now_time = time.strftime("%y/%m/%d %H:%M:%S", time.localtime(time.time()))
+        now_time = time.strftime("%y/%m/%d %H:%M:%S")
         time_msg = '[%s]' % now_time
         return time_msg
 
     # 记录底部的系统信息
     def output_info(self,info): 
         time_msg = self.get_now_time()
-        self.textEdit_output.append(time_msg+"[系统信息]"+info)
+        self.textEdit_output.append(time_msg+' '+info)
 
     # 登陆按钮
     def login(self):
-        self.output_info("请扫描二维码...")      
+        #self.output_info("请扫描二维码...")      
         self.thread = MyThread()    # 创建线程
-        # 线程的信号槽，依次输出：微信聊天记录、系统登录信息、微信远控信息
+        # 线程的信号槽，依次关联：写微信聊天记录、写系统信息、写微信远控信息、更新好友列表、更新群聊列表
         self.thread._signal_1.connect(self.write_log)   
         self.thread._signal_2.connect(self.output_info)
         self.thread._signal_3.connect(self.output_remote_info)  
+        self.thread._signal_4.connect(self.update_friends)
+        self.thread._signal_5.connect(self.update_chatrooms)
         self.thread.start()    # 开始线程
-        # 按钮启用和失效
+
+    # 注销退出按钮
+    def logout(self):   
+        itchat.logout()
+        time.sleep(1) 
+        quitApp()
+        
+    # UI按钮启用，更新好友列表时顺带调用
+    def ui_enabled(self):
         self.pushButton_login.setEnabled(False)
         self.pushButton_logout.setEnabled(True)
         self.pushButton_text_helper.setEnabled(True)
@@ -91,24 +117,58 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         self.pushButton_file_helper.setEnabled(True)
         self.pushButton_file_friend.setEnabled(True)
         self.pushButton_file_chatroom.setEnabled(True)
+      
+    # 左侧好友列表
+    def update_friends(self,frinends_list):
+        self.ui_enabled()  # 启用ui按钮
+        self.slm_1 = QtCore.QStringListModel()    # 实例化列表模型
+        self.qList_1 = frinends_list
+        self.slm_1.setStringList(self.qList_1)   # 加载数据列表
+        self.listView_friend.setModel(self.slm_1)        # 设置列表视图的模型
+        self.listView_friend.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)   # 多选列表
+        self.listView_friend.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)       # 不能对表格进行修改（双击重命名等）
+        self.listView_friend.clicked.connect(self.friends_clicked)
+        self.listView_friend.doubleClicked.connect(self.listView_friend.clearSelection)
 
-    # 注销按钮
-    def logout(self):    
-        itchat.logout()
-        self.output_info("您已注销微信！")
-        # 按钮启用和失效
-        self.pushButton_login.setEnabled(True)
-        self.pushButton_logout.setEnabled(False)       
-        self.pushButton_text_helper.setEnabled(False)
-        self.pushButton_text_friend.setEnabled(False)
-        self.pushButton_text_chatroom.setEnabled(False)
-        self.pushButton_open_file.setEnabled(False)
-        self.pushButton_file_helper.setEnabled(False)
-        self.pushButton_file_friend.setEnabled(False)
-        self.pushButton_file_chatroom.setEnabled(False)
-        
+    def friends_clicked(self):
+        friends_clicked_name = ''
+        friends_clicked_list = []
+        for i in self.listView_friend.selectedIndexes():
+            friend_Name = i.data()
+            friends_clicked_name += friend_Name + '，'         
+            friend_NickName = friend_Name.split('[')[0] 
+            friends_clicked_list.append(friend_NickName)
+        num =len(friends_clicked_list)
+        friends_num = friends_clicked_name + '共计['+str(num)+']人'
+        self.lineEdit_text_friend.setText(friends_num)
+        self.lineEdit_file_friend.setText(friends_num)
+        return friends_clicked_list
 
-    
+    # 左侧群聊列表
+    def update_chatrooms(self,chatrooms_list):
+        self.slm_2 = QtCore.QStringListModel()    # 实例化列表模型
+        self.qList_2 = chatrooms_list
+        self.slm_2.setStringList(self.qList_2)   # 加载数据列表
+        self.listView_chatroom.setModel(self.slm_2)        # 设置列表视图的模型
+        self.listView_chatroom.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)     # 多选列表
+        self.listView_chatroom.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)    # 禁止对列表修改（双击重命名）
+        self.listView_chatroom.clicked.connect(self.chatrooms_clicked)
+        self.listView_chatroom.doubleClicked.connect(self.listView_chatroom.clearSelection)
+
+    def chatrooms_clicked(self):
+        chatrooms_clicked_name = ''
+        chatrooms_clicked_list = []
+        for i in self.listView_chatroom.selectedIndexes():
+            chatroom_Name = i.data()
+            chatrooms_clicked_name += chatroom_Name + '，'
+            chatrooms_clicked_list.append(chatroom_Name)
+        num = len(chatrooms_clicked_list)
+        chatrooms_num = chatrooms_clicked_name+'共计['+str(num)+']个群'
+        self.lineEdit_text_chatroom.setText(chatrooms_num)
+        self.lineEdit_file_chatroom.setText(chatrooms_num)
+        return chatrooms_clicked_list
+
+   
 #######################################################################################
 # 微信发送文字、文件
 #######################################################################################
@@ -117,7 +177,7 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
     # 参数:是否群聊，消息内容，消息时间, 依次类型: bool,str,int
     def write_log(self,fromChatroom,message,send_time,):
         myTime = time.strftime("%m-%d %H:%M:%S", time.localtime(send_time))  # "%Y/%m/%d %H:%M:%S"
-        msg_data = '[' + myTime + ']  ' + message
+        msg_data = '['+myTime+'] '+message
         if fromChatroom == False :
             self.textEdit_friend_record.append(msg_data)
         else:
@@ -125,106 +185,124 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
 
     # 发送文字到助手
     def text_to_helper(self):
-        #print("执行：text_to_helper")
         text_send = self.textEdit_text_friend.toPlainText()
         itchat.send(text_send, toUserName='filehelper')
-        self.output_info("成功发送文字至：文件传输助手")
+        #self.output_info("成功发送文字至：文件传输助手")
         fromChatroom = False    # 做个记号，不是群聊
-        message = "Python → 助手：" + text_send        # 编辑聊天记录内容
+        message = "Python→助手：" + text_send        # 编辑聊天记录内容
         send_time = time.time()     # 获取当前时间
         self.write_log(fromChatroom,message, send_time)     # 写聊天记录
 
     # 发送文字到好友
     def text_to_friend(self):
-        #print("执行：tex_to_friend")
         text_send = self.textEdit_text_friend.toPlainText()
-        text_friend = self.lineEdit_text_friend.text()
-        #print('text_friend:%s'%text_friend)
-        if text_friend == '':
-            self.output_info("您还没有输入好友昵称！")
+        text_friends = self.friends_clicked()
+        #print(text_friends)
+        if len(text_friends) == 0:  # 没有勾选,列表空           
+            self.output_info("您还没有选择好友！")
         else:
-            search_username = itchat.search_friends(text_friend)
-            #print(search_username)
-            if search_username:
-                text_username = search_username[0]['UserName']      #用户ID，一长串数字，用于发消息
-                text_nickname = search_username[0]['NickName']      #用户昵称
-                itchat.send(text_send, toUserName=text_username)
-                # itchat.send('来自：MineWechat', toUserName=text_username)
-                self.output_info("成功发送文字至好友：%s" % text_nickname)
-                fromChatroom = False
-                message = "Python → "+ text_nickname + "：" + text_send
-                send_time = time.time()
-                self.write_log(fromChatroom,message,send_time)               
-            else:
-                self.output_info("找不到该好友！")
-        
+            for friend in text_friends:
+                search_username = itchat.search_friends(friend)
+                #print(search_username)
+                if search_username:
+                    text_username = search_username[0]['UserName']      #用户ID，一长串数字，用于发消息
+                    text_nickname = search_username[0]['NickName']      #用户昵称
+                    itchat.send(text_send, toUserName=text_username)
+                    #itchat.send('来自：MineWechat', toUserName=text_username)
+                    #self.output_info("成功发送文字至好友：%s" % text_nickname)
+                    fromChatroom = False
+                    message = "Python→"+ text_nickname + '：' + text_send
+                    send_time = time.time()
+                    self.write_log(fromChatroom,message,send_time)               
+                else:
+                    self.output_info("找不到该好友！")
 
     # 发送文字到群聊
     def text_to_chatroom(self):
-        #print("执行：text_to_chatroom")
         text_send = self.textEdit_text_chatroom.toPlainText()
-        text_chatroom = self.lineEdit_text_chatroom.text()
-        if text_chatroom == '':
-            self.output_info("您还没有输入群聊名称！")
+        text_chatrooms = self.chatrooms_clicked()
+        if len(text_chatrooms) == 0:
+            self.output_info("您还没有选择群聊！")
         else:
-            search_username = itchat.search_chatrooms(text_chatroom)
-            if search_username:
-                text_username = search_username[0]['UserName']
-                itchat.send(text_send, toUserName=text_username)
-                self.output_info("成功发送文字至群聊：%s" % text_chatroom)
-                fromChatroom = True
-                message = "Python → " + text_chatroom + "：" + text_send
-                send_time = time.time()
-                self.write_log(fromChatroom,message, send_time)
-            else:
-                self.output_info("找不到该群聊!")
+            for chatroom in text_chatrooms:
+                search_username = itchat.search_chatrooms(chatroom)
+                if search_username:
+                    text_username = search_username[0]['UserName']  #群聊ID，一长串数字，用于发消息
+                    text_nickname = search_username[0]['NickName']  #群聊名称
+                    itchat.send(text_send, toUserName=text_username)
+                    #self.output_info("成功发送文字至群聊：%s" % text_nickname)
+                    fromChatroom = True
+                    message = "Python→" + text_nickname + '：' + text_send
+                    send_time = time.time()
+                    self.write_log(fromChatroom,message, send_time)
+                else:
+                    self.output_info("找不到该群聊!")
+
+
+    # 记录发送文件的信息
+    def output_send(self,info): 
+        time_msg = self.get_now_time()
+        self.textEdit_send_record.append(time_msg +' '+info)
 
     # 选择要发送的文件
     def open_file(self):
-        file_name, filetype = QtWidgets.QFileDialog.getOpenFileName(self,"选取文件","D:/","All Files (*)")
+        file_name, filetype = QtWidgets.QFileDialog.getOpenFileName(self,"选取文件",".","All Files (*)")
         self.lineEdit_file_dir.setText(file_name)
     
-    # 发送文件给谁呢?
+    # 发送文件给谁
     def file_to_who(self,file_username):
         file_send = self.lineEdit_file_dir.text()
-        if imghdr.what(file_send):  # 判断文件是否是图片格式
-            itchat.send_image(file_send, toUserName=file_username)
-        else:
-            itchat.send_file(file_send, toUserName=file_username)
+        send_OK = True  # 是否发送成功
+        try:
+            if imghdr.what(file_send):  # 判断文件是否是图片格式
+                itchat.send_image(file_send, toUserName=file_username)
+            else:
+                itchat.send_file(file_send, toUserName=file_username)
+        except:
+            send_OK = False
+            self.output_send("发送文件失败!请检查文件的路径!")
+        return send_OK
 
     # 发送文件到助手
     def file_to_helper(self):
-        self.file_to_who('filehelper')
-        self.output_info("成功发送文件至：文件传输助手")
+        send_OK = self.file_to_who('filehelper')
+        if send_OK:
+            self.output_send("成功发送文件至：文件传输助手")
 
     # 发送文件到好友
     def file_to_friend(self):
-        file_friend = self.lineEdit_file_friend.text()
-        if file_friend == '':
-            self.output_info("您还没有输入好友昵称！")
+        file_friends = self.friends_clicked()
+        if len(file_friends) == 0:
+            self.output_send("您还没有选择好友！")
         else:
-            search_username = itchat.search_friends(file_friend)
-            if search_username:
-                file_username = search_username[0]['UserName']      #用户ID，一长串数字，用于发消息
-                file_nickname = search_username[0]['NickName']      #用户昵称
-                self.file_to_who(file_username)
-                self.output_info("成功发送文件至好友：%s" % file_nickname)
-            else:
-                self.output_info("找不到该好友！")
+            for friend in file_friends:
+                search_username = itchat.search_friends(friend)
+                #print(search_username)
+                if search_username:
+                    file_username = search_username[0]['UserName']      #用户ID，一长串数字，用于发消息
+                    file_nickname = search_username[0]['NickName']      #用户昵称
+                    send_OK = self.file_to_who(file_username)
+                    if send_OK:
+                        self.output_send("成功发送文件至好友：%s" % file_nickname)
+                else:
+                    self.output_send("找不到该好友！")
 
     # 发送文件到群聊
     def file_to_chatroom(self):
-        file_chatroom = self.lineEdit_file_chatroom.text()
-        if file_chatroom == '':
-            self.output_info("您还没有输入群聊名称！")
+        file_chatrooms = self.chatrooms_clicked()
+        if len(file_chatrooms) == 0:
+            self.output_send("您还没有选择群聊！")
         else:
-            search_username = itchat.search_chatrooms(file_chatroom)
-            if search_username:
-                file_username = search_username[0]['UserName']
-                self.file_to_who(file_username)
-                self.output_info("成功发送文件至群聊：%s" % file_chatroom)
-            else:
-                self.output_info("找不到该群聊！")
+            for chatroom in file_chatrooms:
+                search_username = itchat.search_chatrooms(chatroom)
+                if search_username:
+                    file_username = search_username[0]['UserName']
+                    file_nickname = search_username[0]['NickName']
+                    send_OK = self.file_to_who(file_username)
+                    if send_OK:
+                        self.output_send("成功发送文件至群聊：%s" % file_nickname)
+                else:
+                    self.output_send("找不到该群聊！")
 
 
 ###############################################################################
@@ -280,31 +358,52 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
     # 记录远程控制相关信息
     def output_remote_info(self,message):       
         time_msg = self.get_now_time()
-        remote_info = time_msg + ' ' + message
-        self.textEdit_remote.append(remote_info)
+        self.textEdit_remote.append(time_msg+' '+message)
 
 
 
 #########################################################################################################
-# 线程
+# 微信线程
 #########################################################################################################
 
-class MyThread(QtCore.QThread):
-    # 定义信号，用于记录聊天信息，含：是否群聊，消息内容，消息时间
-    _signal_1 = QtCore.pyqtSignal(bool,str,int)
-    # 定义信号，仅用于记录登陆成功的两条系统信息
-    _signal_2 = QtCore.pyqtSignal(str)
-    # 定义信号,用于记录远控信息
-    _signal_3 = QtCore.pyqtSignal(str)
+class MyThread(QtCore.QThread):   
+    _signal_1 = QtCore.pyqtSignal(bool,str,int)    # 定义信号，用于记录聊天信息，含：是否群聊，消息内容，消息时间    
+    _signal_2 = QtCore.pyqtSignal(str)             # 定义信号，仅用于记录登陆成功的系统信息    
+    _signal_3 = QtCore.pyqtSignal(str)             # 定义信号，用于记录远控信息
+    _signal_4 = QtCore.pyqtSignal(list)            # 定义信号，用于记录好友列表
+    _signal_5 = QtCore.pyqtSignal(list)            # 定义信号，用于记录群聊列表
     def __int__(self, parent=None):
         super(MyThread, self).__init__()
 
     def run(self):
         itchat.auto_login()
         userInfo = itchat.web_init()
-        self._signal_2.emit('成功登陆！账号：%s' % userInfo['User']['NickName'])
-        self._signal_2.emit('准备就绪，可以关闭二维码了！')
+        self._signal_2.emit('成功登陆！账号：%s，可以关闭二维码了！' % userInfo['User']['NickName'])
+        self.myUserName = userInfo['User']['UserName']
+        self.get_friendslist()
+        self.get_chatroomslist()
         itchat.run()
+
+    def get_friendslist(self):
+        friends_info = itchat.get_friends(update=True)
+        frinends_list = []
+        for friend in friends_info:
+            friend_Name = '%s[%s]'%(friend['NickName'],friend['RemarkName'])
+            frinends_list.append(friend_Name)
+        frinends_pinyin = [''.join(lazy_pinyin(frinend)) for frinend in frinends_list]  # 好友列表转拼音
+        dict1 = dict(zip(frinends_pinyin,frinends_list))    # 拼音列表和昵称列表并成字典,像这样 {'zhangsan':'张三','lisi':'李四'}
+        sort1 = sorted(dict1.items(),key=lambda item:item[0])   # 按拼音排序,输出 [('lisi','李四'),('zhangsan','张三')]
+        dict2 = dict(sort1) # 转成字典 {'lisi':'李四','zhangsan':'张三'}
+        frinends_sorted = list(dict2.values()) # 取字典的值转列表 ['李四','张三']
+        self._signal_4.emit(frinends_sorted)
+
+    def get_chatroomslist(self):
+        chatrooms_info = itchat.get_chatrooms(update=True)
+        chatrooms_list = []
+        for chatroom in chatrooms_info:
+            chatroom_Name = chatroom['NickName']
+            chatrooms_list.append(chatroom_Name)
+        self._signal_5.emit(chatrooms_list)
 
 
 
@@ -315,7 +414,7 @@ class MyThread(QtCore.QThread):
 # 私聊信息，文字
 @itchat.msg_register(TEXT)
 def get_msg(msg):
-    myUserName = itchat.get_friends(update=True)[0]["UserName"]
+    myUserName = myshow.thread.myUserName
     fromChatroom = False
     if msg['FromUserName'] == myUserName:
         # 这是我发出的消息
@@ -323,8 +422,8 @@ def get_msg(msg):
         if msg['ToUserName'] == 'filehelper':
             to_Name = '助手'
             if '#' in msg['Text'] and remote_pc == True:    # 执行命令条件：1发给助手 2命令中带井号 3远控开启
-                do_what = msg['Text'].split('#')[1]  # #分割，取第二个元素，即：具体指令。
-                wechat_do(do_what)
+                do_what = msg['Text'].split('#')[1]         # 以#分割，取第二个元素，即：具体指令。
+                wechat_do(do_what)  # 调用方法
         else:
             to_Name = msg['User'].get('NickName')
     elif msg['ToUserName'] == myUserName:
@@ -334,21 +433,21 @@ def get_msg(msg):
             from_Name = '助手'
         else:
             from_Name = msg['User'].get('NickName')
-
-        if reply_busy == True:  # 自动回复
+        # 自动回复
+        if reply_busy == True:  # 忙碌回复
             msg_busy = myshow.lineEdit_busy.text()
             itchat.send('[自动回复] %s' % msg_busy, msg['FromUserName'])
         if reply_robot == True:   # 机器人回复
             itchat.send('[机器人回复] %s' % myshow.tuling(msg['Text']), msg['FromUserName'])     
-    message = from_Name + ' → ' + to_Name + '：' + str(msg['Text'])
+    message = from_Name + '→' + to_Name + '：' + str(msg['Text'])
     send_time = msg['CreateTime']
-    myshow.thread._signal_1.emit(fromChatroom,message, send_time)       # 信号焕发，连接 write_log
+    myshow.thread._signal_1.emit(fromChatroom, message, send_time)       # 信号焕发，连接 write_log
 
 
 # 私聊信息，图片、视频等
 @itchat.msg_register([PICTURE, RECORDING, ATTACHMENT, VIDEO])
 def download_files(msg):
-    myUserName = itchat.get_friends(update=True)[0]["UserName"]
+    myUserName = myshow.thread.myUserName
     fromChatroom = False
     if msg['FromUserName'] == myUserName:
         # 这是我发出的消息
@@ -364,20 +463,20 @@ def download_files(msg):
             from_Name = '助手'
         else:
             from_Name = msg['User'].get('NickName')
-
+        # 自动回复
         if reply_busy == True:
             msg_busy = myshow.lineEdit_busy.text()
             itchat.send('[自动回复] %s' % msg_busy, msg['FromUserName'])
         if reply_robot == True:
             itchat.send('[机器人回复] %s' % myshow.tuling(msg['Text']), msg['FromUserName'])       
     # 新建接收文件夹
-    isExists=os.path.exists("接收文件") 
+    isExists=os.path.exists("接收文件") # 目录是否存在
     if not isExists:
         os.makedirs("接收文件")
-    os.chdir("接收文件")
+    os.chdir("接收文件")         # 改变当前工作目录
     msg.download(msg.fileName)  # 下载文件
     os.chdir("..")
-    message =  from_Name + ' → ' + to_Name + '：'+ '[文件: %s]'%msg['FileName']
+    message =  from_Name + '→' + to_Name + '：'+ '[文件: %s]'%msg['FileName']
     send_time = msg['CreateTime']
     myshow.thread._signal_1.emit(fromChatroom, message, send_time)      # 信号焕发，连接 write_log
 
@@ -387,14 +486,15 @@ def get_msg_at(msg):
     if msg['isAt']:
         if reply_busy == True:
             msg_busy = myshow.lineEdit_busy.text()
-            itchat.send(u'@%s\u2005[自动回复] %s' % (msg['ActualNickName'], msg_busy), msg['FromUserName'])
+            itchat.send(u'@%s\u2005[自动回复] %s' % (msg['ActualNickName'], msg_busy), msg['FromUserName']) # msg['ActualNickName']是发起@的人,msg['FromUserName']是群ID
         if reply_robot == True:
             itchat.send(u'@%s\u2005[机器人回复] %s' % (msg['ActualNickName'],myshow.tuling(msg['Text'])), msg['FromUserName'])
         from_Name = msg['ActualNickName']
+        chatroom_NickName = msg['User']['NickName']
         fromChatroom = True
-        message = from_Name + ' @ 我' + '：' + str(msg['Text'])
+        message = '['+chatroom_NickName+'] '+from_Name + '@我：' + str(msg['Text'])
         send_time = msg['CreateTime']
-        myshow.thread._signal_1.emit(fromChatroom,message, send_time)       # 信号焕发，连接 write_log
+        myshow.thread._signal_1.emit(fromChatroom, message, send_time)       # 信号焕发，连接 write_log
 
 
 
@@ -538,7 +638,7 @@ def more_cmd(do_cmd):
     myshow.thread._signal_3.emit(send_msg)
 
 def send_2key(key_1, key_2):
-    '''发送键盘组合键,key_1,key_2,按键码表'''
+    '''发送键盘组合键,key_1,key_2,查按键码表'''
     win32api.keybd_event(key_1, 0, 0, 0)  # 键盘按下
     time.sleep(1)
     win32api.keybd_event(key_2, 0, 0, 0)  # 键盘按下
@@ -600,7 +700,7 @@ def reply_robot_off():
 
 
 #########################################################################################################
-# 程序窗口,以及系统托盘
+# 主程序窗口,以及系统托盘
 #########################################################################################################
 
 if __name__ == "__main__":
