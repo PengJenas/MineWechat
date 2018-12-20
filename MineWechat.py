@@ -470,12 +470,14 @@ def download_files(msg):
         if reply_robot == True:
             itchat.send('[机器人回复] %s' % myshow.tuling(msg['Text']), msg['FromUserName'])       
     # 新建接收文件夹
-    isExists=os.path.exists("接收文件") # 目录是否存在
-    if not isExists:
-        os.makedirs("接收文件")
-    os.chdir("接收文件")         # 改变当前工作目录
+    downloadDir = '接收文件'
+    if not os.path.exists(downloadDir): # 目录是否存在
+        os.makedirs(downloadDir)
+    workPath = os.getcwd()	#当前程序工作的路径
+    downloadPath = os.path.join(workPath,downloadDir) #接收文件的路径
+    os.chdir(downloadPath)      # 改变当前工作目录
     msg.download(msg.fileName)  # 下载文件
-    os.chdir("..")
+    os.chdir(workPath)
     message =  from_Name + '→' + to_Name + '：'+ '[文件: %s]'%msg['FileName']
     send_time = msg['CreateTime']
     myshow.thread._signal_1.emit(fromChatroom, message, send_time)      # 信号焕发，连接 write_log
