@@ -9,7 +9,7 @@
 - [下载链接](https://github.com/PengJenas/MineWechat/releases)
 
 ## 功能简介
-- 微信聊天、发送文件
+- 微信群发
 - 微信忙碌回复
 - 微信机器人回复
 - 微信远程控制电脑
