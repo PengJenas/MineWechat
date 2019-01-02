@@ -1,3 +1,5 @@
+
+
 # MineWechat
 小白初学python，第一次发作品，见笑了
 - [功能简介](#功能简介)
@@ -5,6 +7,7 @@
 - [软件使用](#软件使用)
 - [存在不足](#存在不足)
 
+## [软件下载](https://github.com/PengJenas/MineWechat/releases)
 
 ## 功能简介
 - 微信聊天、发送文件
