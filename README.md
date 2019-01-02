@@ -7,7 +7,7 @@
 - [软件使用](#软件使用)
 - [存在不足](#存在不足)
 
-## [软件下载]
+## 软件下载
 - [下载链接](https://github.com/PengJenas/MineWechat/releases)
 
 ## 功能简介
