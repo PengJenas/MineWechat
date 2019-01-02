@@ -1,5 +1,3 @@
-## [软件下载](https://github.com/PengJenas/MineWechat/releases)
-
 # MineWechat
 小白初学python，第一次发作品，见笑了
 - [功能简介](#功能简介)
