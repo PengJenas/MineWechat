@@ -14,15 +14,13 @@
 - 微信机器人回复
 - 微信远程控制电脑
 
-
 ## 软件截图
 ![1.png](https://i.loli.net/2018/12/19/5c19fa5eb02c6.png)
 ![2.png](https://i.loli.net/2018/12/19/5c19fa5f40506.png)
 ![3.png](https://i.loli.net/2018/12/19/5c19fb8c78d32.png)
 ![4.png](https://i.loli.net/2018/12/19/5c19fb8cc7a0b.png)
-![5.png](https://i.loli.net/2019/03/08/5c8233468f70f.png)
-![6.png](https://i.loli.net/2019/03/08/5c823346aa034.png)
-
+![5.png](https://i.loli.net/2019/03/08/5c8234b6d9c58.png)
+![6.png](https://i.loli.net/2019/03/08/5c8234b6e3a18.png)
 
 ## 软件使用
 - 编辑以下远程控制指令发送给"文件传输助手"
