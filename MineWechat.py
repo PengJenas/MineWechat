@@ -246,7 +246,7 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
 
     # 选择要发送的文件
     def open_file(self):
-        file_name, filetype = QtWidgets.QFileDialog.getOpenFileName(self,"选取文件",".","All Files (*)")
+        file_name = QtWidgets.QFileDialog.getOpenFileName(self,"选取文件",".","All Files (*)")[0]
         self.lineEdit_file_dir.setText(file_name)
     
     # 发送文件给谁
@@ -668,7 +668,6 @@ def send_alt_tab():
 def reply_busy_on():
     '''打开忙碌回复'''
     myshow.checkBox_busy.setChecked(True)
-    reply_busy = True
     send_msg = '[远控信息] 已打开忙碌回复功能'
     itchat.send(send_msg, toUserName='filehelper')
     myshow.thread._signal_3.emit(send_msg)
@@ -677,7 +676,6 @@ def reply_busy_on():
 def reply_busy_off():
     '''关闭忙碌回复'''
     myshow.checkBox_busy.setChecked(False)
-    reply_busy = False
     send_msg = '[远控信息] 已关闭忙碌回复功能'
     itchat.send(send_msg, toUserName='filehelper')
     myshow.thread._signal_3.emit(send_msg)
@@ -685,7 +683,6 @@ def reply_busy_off():
 def reply_robot_on():
     '''打开机器人回复'''
     myshow.checkBox_robot.setChecked(True)
-    reply_robot = True
     send_msg = '[远控信息] 已打开机器人回复功能'
     itchat.send(send_msg, toUserName='filehelper')
     myshow.thread._signal_3.emit(send_msg)
@@ -693,7 +690,6 @@ def reply_robot_on():
 def reply_robot_off():
     '''关闭机器人回复'''
     myshow.checkBox_robot.setChecked(False)
-    reply_robot = False
     send_msg = '[远控信息] 已关闭机器人回复功能'
     itchat.send(send_msg, toUserName='filehelper')
     myshow.thread._signal_3.emit(send_msg)
