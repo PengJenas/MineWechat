@@ -10,7 +10,7 @@ from PIL import ImageGrab    # 截图用
 import imghdr    # 识别图像格式
 import requests,json    # 爬机器人回复
 import itchat    # 微信库
-from itchat.content import *
+from itchat.content import TEXT, PICTURE, RECORDING, ATTACHMENT, VIDEO
 from PyQt5 import QtCore, QtGui, QtWidgets
 from MineUI import Ui_Form    # 程序UI
 import img_rc    # 程序图标文件
