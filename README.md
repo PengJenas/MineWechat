@@ -1,4 +1,5 @@
-![操作系统](https://img.shields.io/badge/OS-Windows%207-brightgreen.svg)
+![操作系统](https://img.shields.io/badge/OS-Windows%207%2B-brightgreen.svg)
+![python版本](https://img.shields.io/badge/python-3.6-brightgreen.svg)
 # MineWechat
 小白初学python，第一次发作品，见笑了
 - [功能简介](#功能简介)
