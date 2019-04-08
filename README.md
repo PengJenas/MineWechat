@@ -9,7 +9,7 @@
 - [存在不足](#存在不足)
 
 ## 下载试用
-- [![](https://img.shields.io/badge/download-win%20完整版-blue.svg?style=for-the-badge&logo=windows)](https://github.com/PengJenas/MineWechat/releases/download/V3.5.3/MineWechat3.5.3.exe)
+[![](https://img.shields.io/badge/download-win%20完整版-blue.svg?style=for-the-badge&logo=windows)](https://github.com/PengJenas/MineWechat/releases/download/V3.5.3/MineWechat3.5.3.exe)
 
 ## 功能简介
 - 微信群发消息
