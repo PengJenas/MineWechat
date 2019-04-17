@@ -393,7 +393,7 @@ class MyThread(QtCore.QThread):
         friends_pinyin = [''.join(lazy_pinyin(frinend)) for frinend in friends_list]  # 好友列表转拼音列表
         list1 = list(zip(friends_pinyin,friends_list))    # 拼音列表和昵称列表并成新列表,像这样 [('zhangsan','张三'),('Mango','Mango'),('lisi','李四')]
         #sort1 = sorted(list1) # 这种排序，大写字母会排在前面， [('Mango','Mango'),('zhangsan','张三'),('lisi','李四')]
-        sort1 = sorted(list1,key=lambda x:(x[0].lower()))   # 转小写排序,输出 [('lisi','李四'),('Mango','Mango'),('zhangsan','张三')]
+        sort1 = sorted(list1,key=lambda x:x[0].lower())   # 转小写排序,输出 [('lisi','李四'),('Mango','Mango'),('zhangsan','张三')]
         friends_sorted = list(i[1] for i in sort1)  # ['李四','Mango','张三']
         self._signal_4.emit(friends_sorted)
 
