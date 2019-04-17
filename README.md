@@ -2,7 +2,7 @@
 ![操作系统](https://img.shields.io/badge/platform-win64-lightgrey.svg)
 ![版本](https://img.shields.io/github/release/PengJenas/MineWechat.svg)
 
-# MineWechat
+# 📢MineWechat
 小白初学python，第一次发作品，见笑了
 - [功能简介](#功能简介)
 - [软件截图](#软件截图)
