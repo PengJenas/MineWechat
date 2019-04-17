@@ -386,16 +386,16 @@ class MyThread(QtCore.QThread):
 
     def get_friendslist(self):
         friends_info = itchat.get_friends(update=True)
-        frinends_list = []
+        friends_list = []
         for friend in friends_info:
             friend_Name = '%s[%s]'%(friend['NickName'],friend['RemarkName'])
-            frinends_list.append(friend_Name)
-        frinends_pinyin = [''.join(lazy_pinyin(frinend)) for frinend in frinends_list]  # 好友列表转拼音
-        dict1 = dict(zip(frinends_pinyin,frinends_list))    # 拼音列表和昵称列表并成字典,像这样 {'zhangsan':'张三','lisi':'李四'}
-        sort1 = sorted(dict1.items(),key=lambda item:item[0])   # 按拼音排序,输出 [('lisi','李四'),('zhangsan','张三')]
-        dict2 = dict(sort1) # 转成字典 {'lisi':'李四','zhangsan':'张三'}
-        frinends_sorted = list(dict2.values()) # 取字典的值转列表 ['李四','张三']
-        self._signal_4.emit(frinends_sorted)
+            friends_list.append(friend_Name)
+        friends_pinyin = [''.join(lazy_pinyin(frinend)) for frinend in friends_list]  # 好友列表转拼音列表
+        list1 = list(zip(friends_pinyin,friends_list))    # 拼音列表和昵称列表并成新列表,像这样 [('zhangsan','张三'),('Mango','Mango'),('lisi','李四')]
+        #sort1 = sorted(list1) # 这种排序，大写字母会排在前面， [('Mango','Mango'),('zhangsan','张三'),('lisi','李四')]
+        sort1 = sorted(list1,key=lambda x:(x[0].lower()))   # 转小写排序,输出 [('lisi','李四'),('Mango','Mango'),('zhangsan','张三')]
+        friends_sorted = list(i[1] for i in sort1)  # ['李四','Mango','张三']
+        self._signal_4.emit(friends_sorted)
 
     def get_chatroomslist(self):
         chatrooms_info = itchat.get_chatrooms(update=True)
