@@ -395,12 +395,8 @@ class MyThread(QtCore.QThread):
 
     def get_chatroomslist(self):
         chatrooms_info = itchat.get_chatrooms(update=True)
-        chatrooms_list = []
-        for chatroom in chatrooms_info:
-            chatroom_Name = chatroom['NickName']
-            chatrooms_list.append(chatroom_Name)
+        chatrooms_list = [chatroom['NickName'] for chatroom in chatrooms_info] # 组成新的群聊列表
         self._signal_5.emit(chatrooms_list)
-
 
 
 #########################################################################################################
