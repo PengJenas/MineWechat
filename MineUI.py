@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'MineUI.ui'
 #
-# Created by: PyQt5 UI code generator 5.10.1
+# Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -44,6 +44,9 @@ class Ui_Form(object):
         self.pushButton_text_friend.setObjectName("pushButton_text_friend")
         self.lineEdit_text_friend = QtWidgets.QLineEdit(self.groupBox_text_friend)
         self.lineEdit_text_friend.setGeometry(QtCore.QRect(90, 120, 451, 20))
+        self.lineEdit_text_friend.setText("")
+        self.lineEdit_text_friend.setCursorPosition(0)
+        self.lineEdit_text_friend.setPlaceholderText("")
         self.lineEdit_text_friend.setObjectName("lineEdit_text_friend")
         self.pushButton_text_helper = QtWidgets.QPushButton(self.groupBox_text_friend)
         self.pushButton_text_helper.setGeometry(QtCore.QRect(10, 150, 261, 23))
@@ -164,14 +167,14 @@ class Ui_Form(object):
         self.toolBox.setGeometry(QtCore.QRect(12, 10, 200, 570))
         self.toolBox.setObjectName("toolBox")
         self.page_1 = QtWidgets.QWidget()
-        self.page_1.setGeometry(QtCore.QRect(0, 0, 200, 510))
+        self.page_1.setGeometry(QtCore.QRect(0, 0, 200, 518))
         self.page_1.setObjectName("page_1")
         self.listView_friend = QtWidgets.QListView(self.page_1)
         self.listView_friend.setGeometry(QtCore.QRect(-1, -1, 200, 511))
         self.listView_friend.setObjectName("listView_friend")
         self.toolBox.addItem(self.page_1, "")
         self.page_2 = QtWidgets.QWidget()
-        self.page_2.setGeometry(QtCore.QRect(0, 0, 200, 510))
+        self.page_2.setGeometry(QtCore.QRect(0, 0, 200, 518))
         self.page_2.setObjectName("page_2")
         self.listView_chatroom = QtWidgets.QListView(self.page_2)
         self.listView_chatroom.setGeometry(QtCore.QRect(-1, -1, 200, 511))
@@ -185,7 +188,7 @@ class Ui_Form(object):
         self.pushButton_logout.setObjectName("pushButton_logout")
 
         self.retranslateUi(Form)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(5)
         self.toolBox.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
@@ -195,11 +198,13 @@ class Ui_Form(object):
         self.groupBox_login.setTitle(_translate("Form", "系统信息"))
         self.groupBox_friend_record.setTitle(_translate("Form", "私聊记录"))
         self.groupBox_text_friend.setTitle(_translate("Form", "发送文字"))
+        self.textEdit_text_friend.setPlaceholderText(_translate("Form", "输入消息："))
         self.pushButton_text_friend.setText(_translate("Form", "发送至好友"))
         self.pushButton_text_helper.setText(_translate("Form", "发送至文件传输助手"))
         self.label_text_friend.setText(_translate("Form", "好友昵称："))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.chat_friend), _translate("Form", "微信私聊"))
         self.groupBox_text_chatroom.setTitle(_translate("Form", "发送文字"))
+        self.textEdit_text_chatroom.setPlaceholderText(_translate("Form", "可以@群里的某人"))
         self.pushButton_text_chatroom.setText(_translate("Form", "发至群聊"))
         self.label_text_chatroom.setText(_translate("Form", "群聊名称："))
         self.groupBox_chatroom_record.setTitle(_translate("Form", "群聊@记录"))
