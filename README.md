@@ -1,5 +1,6 @@
 ![python版本](https://img.shields.io/badge/python-3.6-green.svg)
 ![操作系统](https://img.shields.io/badge/OS-Windows%207+-green.svg)
+![版本](https://img.shields.io/github/release/PengJenas/MineWechat.svg)
 
 # MineWechat
 小白初学python，第一次发作品，见笑了
