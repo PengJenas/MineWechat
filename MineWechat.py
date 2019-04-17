@@ -25,11 +25,11 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
     def __init__(self):                             
         super(MyWindow, self).__init__()
         self.setupUi(self)
-        QtWidgets.QApplication.setStyle(QtWidgets.QStyleFactory.create('Fusion'))   # 风格
+        QtWidgets.QApplication.setStyle(QtWidgets.QStyleFactory.create('Fusion'))   # 风格                   
+        self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint)		# 右上角只有关闭按钮
+
         # 初始化标签、文本框提示,禁用不需要输入的文本框
         self.output_info("请点击左侧的“扫码登录”按钮！")
-        #self.textEdit_text_friend.setText("输入信息：")
-        self.textEdit_text_chatroom.setText("可以@群里的某人")
         self.lineEdit_busy.setText("您好，我现在忙，不方便回复您！有事请留言！[微笑]")
         self.lineEdit_text_friend.setEnabled(False)
         self.lineEdit_text_chatroom.setEnabled(False)
@@ -63,8 +63,9 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         self.pushButton_file_chatroom.setEnabled(False)
 
         # 提示信息
-        text_help = '====== ★ 感谢使用 MineWechat V3.5.2 ★ ======  By Jenas\n\n'
-        text_help += '1. 作者是新手，程序尚有很多Bug，请多包涵，欢迎反馈！\n\n'
+        text_help = ''
+        text_help += '\n========== ★ 感谢使用 MineWechat V3.5.4 ★ ==========  By Jenas\n\n'
+        text_help += '1. 作者是初学者，程序尚有很多Bug，请多包涵，欢迎反馈！\n\n'
         text_help += '2. 好友、群聊列表支持 Ctrl、Shift 多选，双击清空选择。\n\n'
         text_help += '3. 获取微信远控指令：手机微信编辑“#帮助”发送至“文件传输助手”。\n\n'
         text_help += '4. 发送文件的文件名不可以是中文，但路径可以是中文。\n\n'
@@ -119,10 +120,10 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         self.pushButton_file_chatroom.setEnabled(True)
       
     # 左侧好友列表
-    def update_friends(self,frinends_list):
+    def update_friends(self,friends_list):
         self.ui_enabled()  # 启用ui按钮
         self.slm_1 = QtCore.QStringListModel()    # 实例化列表模型
-        self.qList_1 = frinends_list
+        self.qList_1 = friends_list
         self.slm_1.setStringList(self.qList_1)   # 加载数据列表
         self.listView_friend.setModel(self.slm_1)        # 设置列表视图的模型
         self.listView_friend.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)   # 多选列表
@@ -361,7 +362,6 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         self.textEdit_remote.append(time_msg+' '+message)
 
 
-
 #########################################################################################################
 # 微信线程
 #########################################################################################################
@@ -386,7 +386,9 @@ class MyThread(QtCore.QThread):
 
     def get_friendslist(self):
         friends_info = itchat.get_friends(update=True)
-        frinends_list = ['{}[{}]'.format(friend['NickName'],friend['RemarkName']) for friend in friends_info] # 组成新的好友列表，昵称[备注名]
+        # 列表推导式 [x for x in data if condition] 此处if主要起条件判断作用，数据中只有满足if条件的才会被留下
+        # 列表推导式 [exp1 if condition else exp2 for x in data]  此处if…else主要起赋值作用，当数据满足if条件时将其做exp1处理，否则按照exp2处理
+        frinends_list = ['{}[{}]'.format(friend['NickName'],friend['RemarkName']) if friend['RemarkName'] else friend['NickName'] for friend in friends_info ] # 生成新的好友列表。若某好友有备注名，则昵称[备注名]；否则仅昵称
         frinends_pinyin = [''.join(lazy_pinyin(frinend)) for frinend in frinends_list]  # 根据好友列表生成拼音列表
         dict1 = dict(zip(frinends_pinyin,frinends_list))    # 拼音列表和昵称列表并成字典,像这样 {'zhangsan':'张三','Mango':'Mango','lisi':'李四'}
         sort1 = sorted(dict1.items(),key=lambda x:x[0].lower())   # 按拼音排序,输出 [('lisi','李四'),('zhangsan','张三')]
@@ -397,6 +399,7 @@ class MyThread(QtCore.QThread):
         chatrooms_info = itchat.get_chatrooms(update=True)
         chatrooms_list = [chatroom['NickName'] for chatroom in chatrooms_info] # 组成新的群聊列表
         self._signal_5.emit(chatrooms_list)
+
 
 
 #########################################################################################################
@@ -688,7 +691,6 @@ def reply_robot_off():
 
 
 
-
 #########################################################################################################
 # 主程序窗口,以及系统托盘
 #########################################################################################################
@@ -704,30 +706,24 @@ if __name__ == "__main__":
     reply_robot = False
     remote_pc = True
 
-
     # 在系统托盘处显示图标
     tp = QtWidgets.QSystemTrayIcon(myshow)
     tp.setIcon(QtGui.QIcon(":img/MineWechat.ico"))
     # 设置系统托盘图标的菜单
     a1 = QtWidgets.QAction('&显示(Show)',triggered = myshow.show)   
     def quitApp():
-        # 关闭窗体程序
-        QtCore.QCoreApplication.instance().quit()
-        # 隐藏托盘,防止退出后图标残留
-        tp.setVisible(False)    
+        QtCore.QCoreApplication.instance().quit() # 关闭窗体程序
+        tp.setVisible(False) # 隐藏托盘,防止退出后图标残留
     a2 = QtWidgets.QAction('&退出(Exit)',triggered = quitApp) # 直接退出可以用QtWidgets.qApp.quit ,但会残留图标直到鼠标经过    
     tpMenu = QtWidgets.QMenu()
     tpMenu.addAction(a1)
     tpMenu.addAction(a2)
     tp.setContextMenu(tpMenu)
-    # 不调用show不会显示系统托盘
-    tp.show()
-    # 托盘信息提示,参数1：标题,参数2：内容,参数3：图标（0没有图标 1信息图标 2警告图标 3错误图标），0还是有一个小图标
-    tp.showMessage('MineWechat','关闭程序窗口，我依然在这里！',icon=0)
+    tp.show() # 不调用show不会显示系统托盘
+    tp.showMessage('MineWechat','关闭程序窗口，我依然在这里！',icon=0) # 托盘信息提示,参数1：标题,参数2：内容,参数3：图标（0没有图标 1信息图标 2警告图标 3错误图标），0还是有一个小图标
     # 鼠标点击托盘图标
     def act(reason):
-        # 鼠标点击icon传递的信号会带有一个整形的值，1是表示单击右键，2是双击，3是单击左键，4是用鼠标中键点击
-        if reason == 2 or reason == 3:
+        if reason == 2 or reason == 3:  # 鼠标点击icon传递的信号会带有一个整形的值，1是表示单击右键，2是双击，3是单击左键，4是用鼠标中键点击
             myshow.show()
     tp.activated.connect(act)
     sys.exit(app.exec_())
