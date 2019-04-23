@@ -36,6 +36,8 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         self.lineEdit_file_dir.setEnabled(False)
         self.lineEdit_file_friend.setEnabled(False)
         self.lineEdit_file_chatroom.setEnabled(False)
+        # 私聊、群聊切换
+        self.tabWidget.currentChanged['int'].connect(self.toolBox.setCurrentIndex)
         # 按钮
         self.pushButton_login.clicked.connect(self.login)
         self.pushButton_logout.clicked.connect(self.logout)
