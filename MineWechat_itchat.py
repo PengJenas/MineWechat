@@ -729,4 +729,4 @@ if __name__ == "__main__":
             myshow.show()
     tp.activated.connect(act)
     sys.exit(app.exec_())
-    
+   
