@@ -366,7 +366,11 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
                 file_name.send_file(file_send)
             send_OK = True
         except:
+<<<<<<< HEAD
             self.output_info("发送文件失败!请检查文件的路径!") #wxpy 发送文件失败，升级itchat就能解决
+=======
+            self.output_send("发送文件失败!请检查文件的路径!")  # wxpy发送文件失败，升级itchat就能解决
+>>>>>>> 85e8c714ad58137d314ad409a12ece3aee70dd81
         return send_OK
 
     # 发送文件到助手
@@ -808,5 +812,6 @@ if __name__ == "__main__":
             myshow.show()
     tp.activated.connect(act)
 
-
     sys.exit(app.exec_())
+
+
