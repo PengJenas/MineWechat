@@ -1,0 +1,20 @@
+<RCC>
+  <qresource prefix="img">
+    <file>images/MineWechat.ico</file>
+    <file>images/帮助.png</file>
+    <file>images/wechat.png</file>
+    <file>images/回复.png</file>
+    <file>images/远程协助.png</file>
+    <file>images/隐藏.png</file>
+    <file>images/功能管理.png</file>
+    <file>images/下拉.png</file>
+    <file>images/搜索.png</file>
+    <file>images/关闭.png</file>
+    <file>images/置顶.png</file>
+    <file>images/最小化.png</file>
+    <file>images/登出.png</file>
+    <file>images/好友列表.png</file>
+    <file>images/群聊.png</file>
+    <file>images/扫码.png</file>
+  </qresource>
+</RCC>

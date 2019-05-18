@@ -4,15 +4,16 @@
 
 import os
 import time
-import win32api    # 系统api
-import win32con    # 操作键盘
-from PIL import ImageGrab    # 截图用
+import win32api    # pywin32 系统api   #linux不兼容
+import win32con    # pywin32 操作键盘  #linux不兼容
+from PIL import ImageGrab    # pillow 截图用
 from pypinyin import lazy_pinyin  # 好友列表按拼音排序
 import imghdr    # 识别图像格式
-from wxpy import Bot,Tuling,embed,Group
-from wxpy import ATTACHMENT, CARD, FRIENDS, MAP, PICTURE, RECORDING, SHARING, TEXT, VIDEO
+from wxpy import Bot,Tuling,embed,Group,User
+from wxpy import  TEXT, ATTACHMENT, PICTURE, RECORDING, VIDEO    #, CARD, FRIENDS, MAP, SHARING # 各种消息类型
 from PyQt5 import QtCore, QtGui, QtWidgets
-from MineUI import Ui_Form    # 程序UI
+
+from ui_minewx import Ui_Form    # 程序UI
 import img_rc    # 程序图标文件
 
 
@@ -25,26 +26,52 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
     def __init__(self):                             
         super(MyWindow, self).__init__()
         self.setupUi(self)
-        QtWidgets.QApplication.setStyle(QtWidgets.QStyleFactory.create('Fusion'))   # 风格                   
-        self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint)		# 右上角只有关闭按钮
+        #QtWidgets.QApplication.setStyle(QtWidgets.QStyleFactory.create('Fusion'))   # 风格
+        #self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint)		# 右上角只有关闭按钮
+        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)  # 没有标题栏
+        self.setWindowOpacity(0.95) # 透明
+
+
 
         # 初始化标签、文本框提示,禁用不需要输入的文本框
         self.output_info("请点击左侧的“扫码登录”按钮！")
         self.lineEdit_busy.setText("您好，我现在忙，不方便回复您！有事请留言！[微笑]")
-        self.lineEdit_text_friend.setEnabled(False)
-        self.lineEdit_text_chatroom.setEnabled(False)
         self.lineEdit_file_dir.setEnabled(False)
-        self.lineEdit_file_friend.setEnabled(False)
-        self.lineEdit_file_chatroom.setEnabled(False)
-        # tabWidget切换，联动toolBox
-        self.tabWidget.currentChanged['int'].connect(self.toolBox.setCurrentIndex)
+        self.lineEdit_file_dir_1.setEnabled(False)
+        # 点击button联动stackedWidget对应页面
+        self.toolButton_11friend.clicked.connect(lambda: self.stackedWidget_1.setCurrentIndex(0))
+        self.toolButton_11friend.clicked.connect(lambda: self.stackedWidget_2.setCurrentIndex(0))
+        self.toolButton_12chatroom.clicked.connect(lambda: self.stackedWidget_1.setCurrentIndex(1))
+        self.toolButton_12chatroom.clicked.connect(lambda: self.stackedWidget_2.setCurrentIndex(1))
+        # 更多功能中，还对应三个按钮
+        self.toolButton_13more.clicked.connect(lambda: self.stackedWidget_1.setCurrentIndex(2))
+        #self.toolButton_13more.clicked.connect(lambda: self.stackedWidget_2.setCurrentIndex(3))
+        def btn_more_clicked():
+            if self.toolButton_21remote.isChecked():
+                #print('按钮的isChecked返回True/False')
+                self.stackedWidget_2.setCurrentIndex(2)
+            if self.toolButton_22reply.isChecked():
+                self.stackedWidget_2.setCurrentIndex(3)
+            elif self.toolButton_23help.isChecked():
+                self.stackedWidget_2.setCurrentIndex(4)
+            else:
+                self.stackedWidget_2.setCurrentIndex(2)
+        self.toolButton_13more.clicked.connect(btn_more_clicked)
+
+        self.toolButton_21remote.clicked.connect(lambda: self.stackedWidget_2.setCurrentIndex(2))
+        self.toolButton_22reply.clicked.connect(lambda: self.stackedWidget_2.setCurrentIndex(3))
+        self.toolButton_23help.clicked.connect(lambda: self.stackedWidget_2.setCurrentIndex(4))
+
         # 按钮
-        self.pushButton_login.clicked.connect(self.login)
-        self.pushButton_logout.clicked.connect(self.logout)
+        self.toolButton_18login.clicked.connect(self.login)
+        self.toolButton_19logout.clicked.connect(self.logout)
+        self.toolButton_search.clicked.connect(lambda: self.lineEdit_search.setText("该功能尚未启用！"))
+
         self.pushButton_text_helper.clicked.connect(self.text_to_helper)
         self.pushButton_text_friend.clicked.connect(self.text_to_friend)
         self.pushButton_text_chatroom.clicked.connect(self.text_to_chatroom)
         self.pushButton_open_file.clicked.connect(self.open_file)
+        self.pushButton_open_file_1.clicked.connect(self.open_file)
         self.pushButton_file_helper.clicked.connect(self.file_to_helper)
         self.pushButton_file_friend.clicked.connect(self.file_to_friend)
         self.pushButton_file_chatroom.clicked.connect(self.file_to_chatroom)
@@ -54,18 +81,19 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         self.checkBox_robot.stateChanged.connect(self.check_robot)
         self.checkBox_remote.stateChanged.connect(self.check_remote)
         # 登陆微信前,使按钮失效  
-        #self.pushButton_logout.setEnabled(False)         
+        #self.toolButton_19logout.setEnabled(False)
         self.pushButton_text_helper.setEnabled(False)
         self.pushButton_text_friend.setEnabled(False)
         self.pushButton_text_chatroom.setEnabled(False)
         self.pushButton_open_file.setEnabled(False)
+        self.pushButton_open_file_1.setEnabled(False)
         self.pushButton_file_helper.setEnabled(False)
         self.pushButton_file_friend.setEnabled(False)
         self.pushButton_file_chatroom.setEnabled(False)
 
         # 提示信息
         text_help = '\n'
-        text_help += '========== ★ 感谢使用 MineWechat V3.5.4 ★ ==========  By Jenas\n\n'
+        text_help += '========== ★ 感谢使用 MineWechat V4.0 ★ ==========  By Jenas\n\n'
         text_help += '1. 作者是初学者，程序尚有很多Bug，请多包涵，欢迎反馈！\n\n'
         text_help += '2. 好友、群聊列表支持 Ctrl、Shift 多选，双击清空选择。\n\n'
         text_help += '3. 获取微信远控指令：手机微信编辑“#帮助”发送至“文件传输助手”。\n\n'
@@ -75,13 +103,33 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         self.textEdit_help.setText(text_help)
 
 
+    # 按住鼠标，拖动窗口
+    def mousePressEvent(self, event):
+        if event.button() == QtCore.Qt.LeftButton:
+            self.m_flag = True
+            self.m_Position = event.globalPos() - self.pos()  # 获取鼠标相对窗口的位置
+            event.accept()
+            self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))  # 更改鼠标图标
+
+    def mouseMoveEvent(self, QMouseEvent):
+        if QtCore.Qt.LeftButton and self.m_flag:
+            self.move(QMouseEvent.globalPos() - self.m_Position)  # 更改窗口位置
+            QMouseEvent.accept()
+
+    def mouseReleaseEvent(self, QMouseEvent):
+        self.m_flag = False
+        self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
+
+
+
+
 ############################################################################################
 # 包含：登陆、注销、系统信息、好友列表
 ############################################################################################
 
     # 获取当前时间戳,并转格式,外面再套上方括号，就像这样：[18/09/17 18:12:38]
     def get_now_time(self):     
-        now_time = time.strftime("%y/%m/%d %H:%M:%S")
+        now_time = time.strftime("%m-%d %H:%M:%S")
         time_msg = '[%s]' % now_time
         return time_msg
 
@@ -95,7 +143,8 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         self.thread = MyThread()    # 创建线程
         # 线程的信号槽，依次关联：写微信聊天记录、写系统信息、写微信远控信息、更新好友列表、更新群聊列表
         self.thread._signal_1.connect(self.write_log)
-        self.thread._signal_2.connect(self.output_info)
+        #self.thread._signal_2.connect(self.output_info)
+        self.thread._signal_2.connect(self.get_username)
         self.thread._signal_3.connect(self.output_remote_info)
         self.thread._signal_4.connect(self.update_friends)
         self.thread._signal_5.connect(self.update_chatrooms)
@@ -103,18 +152,25 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
 
     # 注销退出按钮
     def logout(self):
-        myshow.thread.bot.logout()
-        time.sleep(1)
-        quitApp()
+        # myshow.thread.bot.logout()
+        # time.sleep(0.2)
+        quitApp()#底部托盘的方法
+
+    # 用户名
+    def get_username(self,username):
+        self.username = username
+        self.label_name.setText(self.username)
+        self.output_info('登录成功，%s，欢迎使用！'%self.username)
 
     # UI按钮启用，更新好友列表时顺带调用
     def ui_enabled(self):
-        self.pushButton_login.setEnabled(False)
-        self.pushButton_logout.setEnabled(True)
+        self.toolButton_18login.setEnabled(False)
+        self.toolButton_19logout.setEnabled(True)
         self.pushButton_text_helper.setEnabled(True)
         self.pushButton_text_friend.setEnabled(True)
         self.pushButton_text_chatroom.setEnabled(True)
         self.pushButton_open_file.setEnabled(True)
+        self.pushButton_open_file_1.setEnabled(True)
         self.pushButton_file_helper.setEnabled(True)
         self.pushButton_file_friend.setEnabled(True)
         self.pushButton_file_chatroom.setEnabled(True)
@@ -131,19 +187,24 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         self.listView_friend.clicked.connect(self.friends_clicked)
         self.listView_friend.doubleClicked.connect(self.listView_friend.clearSelection)
 
+
+
     # 点击左侧好友列表
     def friends_clicked(self):
         friends_clicked_name = ''
         friends_clicked_list = []
         for i in self.listView_friend.selectedIndexes():
             friend_Name = i.data()
-            friends_clicked_name += friend_Name + '，'         
-            friend_NickName = friend_Name.split('[')[0] 
-            friends_clicked_list.append(friend_NickName)
+            friends_clicked_name += friend_Name + ' '
+            friends_clicked_list.append(friend_Name)
         num =len(friends_clicked_list)
-        friends_num = friends_clicked_name + '共计['+str(num)+']人'
-        self.lineEdit_text_friend.setText(friends_num)
-        self.lineEdit_file_friend.setText(friends_num)
+        if num > 1:
+            friends_num = friends_clicked_name + '共计['+str(num)+']人'
+            self.label_text_friend.setStyleSheet("QLabel#label_text_friend{font: 10pt;}")
+        else:
+            friends_num = friends_clicked_name
+            self.label_text_friend.setStyleSheet("QLabel#label_text_friend{font: 16pt;}")
+        self.label_text_friend.setText(friends_num)
         return friends_clicked_list
 
     # 左侧群聊列表
@@ -163,12 +224,16 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         chatrooms_clicked_list = []
         for i in self.listView_chatroom.selectedIndexes():
             chatroom_Name = i.data()
-            chatrooms_clicked_name += chatroom_Name + '，'
+            chatrooms_clicked_name += chatroom_Name + ' '
             chatrooms_clicked_list.append(chatroom_Name)
         num = len(chatrooms_clicked_list)
-        chatrooms_num = chatrooms_clicked_name+'共计['+str(num)+']个群'
-        self.lineEdit_text_chatroom.setText(chatrooms_num)
-        self.lineEdit_file_chatroom.setText(chatrooms_num)
+        if num > 1:
+            chatrooms_num = chatrooms_clicked_name+'共计['+str(num)+']个群'
+            self.label_text_chatroom.setStyleSheet("QLabel#label_text_chatroom{font: 10pt;}")
+        else:
+            chatrooms_num = chatrooms_clicked_name
+            self.label_text_chatroom.setStyleSheet("QLabel#label_text_chatroom{font: 16pt;}")
+        self.label_text_chatroom.setText(chatrooms_num)
         return chatrooms_clicked_list
 
 
@@ -227,8 +292,8 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
     
     # 记录聊天信息,包含：发送信息、接收信息
     # 参数:是否群聊，消息内容，消息时间, 依次类型: bool,str,int
-    def write_log(self,fromChatroom,message,send_time,):
-        myTime = time.strftime("%m-%d %H:%M:%S", time.localtime(send_time))  # "%Y/%m/%d %H:%M:%S"
+    def write_log(self,fromChatroom,message,send_time):
+        myTime = time.strftime(r"%m-%d %H:%M:%S", time.localtime(send_time)) 
         msg_data = '['+myTime+'] '+message
         if fromChatroom == False :
             self.textEdit_friend_record.append(msg_data)
@@ -239,7 +304,6 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
     def text_to_helper(self):
         text_send = self.textEdit_text_friend.toPlainText()
         self.thread.bot.file_helper.send(text_send)
-        #self.output_info("成功发送文字至：文件传输助手")
         fromChatroom = False    # 做个记号，不是群聊
         message = "Python→助手：" + text_send        # 编辑聊天记录内容
         send_time = time.time()     # 获取当前时间
@@ -253,12 +317,11 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         if len(text_friends) == 0:  # 没有勾选,列表空           
             self.output_info("您还没有选择好友！")
         else:
-            for friend in text_friends:
-                search_name = self.thread.bot.friends().search(friend)[0]
-                #print(search_name)
+            for friend_element in text_friends:
+                #print(friend_element)
+                search_name = self.thread.bot.friends().search(friend_element)[0]
                 if search_name:
                     search_name.send(text_send)
-                    #self.output_info("成功发送文字至好友：%s" % search_name.name)
                     fromChatroom = False
                     message = "Python→"+ search_name.name + '：' + text_send
                     send_time = time.time()
@@ -273,12 +336,11 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         if len(text_chatrooms) == 0:
             self.output_info("您还没有选择群聊！")
         else:
-            for chatroom in text_chatrooms:
-                search_name = self.thread.bot.groups().search(chatroom)[0]
+            for chatroom_element in text_chatrooms:
+                search_name = self.thread.bot.groups().search(chatroom_element)[0]
                 #print(search_name)
                 if search_name:
                     search_name.send(text_send)
-                    #self.output_info("成功发送文字至群聊：%s" % search_name.name)
                     fromChatroom = True
                     message = "Python→" + search_name.name + '：' + text_send
                     send_time = time.time()
@@ -287,15 +349,11 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
                     self.output_info("找不到该群聊!")
 
 
-    # 记录发送文件的信息
-    def output_send(self,info): 
-        time_msg = self.get_now_time()
-        self.textEdit_send_record.append(time_msg +' '+info)
-
     # 选择要发送的文件
     def open_file(self):
         file_name = QtWidgets.QFileDialog.getOpenFileName(self,"选取文件",".","All Files (*)")[0]
         self.lineEdit_file_dir.setText(file_name)
+        self.lineEdit_file_dir_1.setText(file_name)
     
     # 发送文件给谁
     def file_to_who(self,file_name):
@@ -308,7 +366,7 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
                 file_name.send_file(file_send)
             send_OK = True
         except:
-            self.output_send("发送文件失败!请检查文件的路径!")
+            self.output_info("发送文件失败!请检查文件的路径!") #wxpy 发送文件失败，升级itchat就能解决
         return send_OK
 
     # 发送文件到助手
@@ -316,7 +374,10 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         file_helper = self.thread.bot.file_helper
         send_OK = self.file_to_who(file_helper)
         if send_OK:
-            self.output_send("成功发送文件至：文件传输助手")
+            fromChatroom = False  # 做个记号，不是群聊
+            message = "Python→助手：成功发送文件!" # 编辑聊天记录内容
+            send_time = time.time()  # 获取当前时间
+            self.write_log(fromChatroom, message, send_time)  # 写聊天记录
 
 
     # 发送文件到好友
@@ -331,7 +392,10 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
                 if search_name:
                     send_OK = self.file_to_who(search_name)
                     if send_OK:
-                        self.output_send("成功发送文件至好友：%s" % search_name.name)
+                        fromChatroom = False  # 做个记号，不是群聊
+                        message = "Python→" + search_name.name + '：成功发送文件!'
+                        send_time = time.time()  # 获取当前时间
+                        self.write_log(fromChatroom, message, send_time)  # 写聊天记录
                 else:
                     self.output_send("找不到该好友！")
 
@@ -347,7 +411,10 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
                 if search_name:
                     send_OK = self.file_to_who(search_name)
                     if send_OK:
-                        self.output_send("成功发送文件至群聊：%s" % search_name.name)
+                        fromChatroom = True # 做个记号，不是群聊
+                        message = "Python→" + search_name.name + '：成功发送文件!'
+                        send_time = time.time()  # 获取当前时间
+                        self.write_log(fromChatroom, message, send_time)  # 写聊天记录
                 else:
                     self.output_send("找不到该群聊！")
 
@@ -359,7 +426,7 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
 
 class MyThread(QtCore.QThread):   
     _signal_1 = QtCore.pyqtSignal(bool,str,int)    # 定义信号，用于记录聊天信息，含：是否群聊，消息内容，消息时间    
-    _signal_2 = QtCore.pyqtSignal(str)             # 定义信号，仅用于记录登陆成功的系统信息    
+    _signal_2 = QtCore.pyqtSignal(str)             # 定义信号，仅用于传出用户名
     _signal_3 = QtCore.pyqtSignal(str)             # 定义信号，用于记录远控信息
     _signal_4 = QtCore.pyqtSignal(list)            # 定义信号，用于记录好友列表
     _signal_5 = QtCore.pyqtSignal(list)            # 定义信号，用于记录群聊列表
@@ -370,7 +437,7 @@ class MyThread(QtCore.QThread):
     def run(self):
         self.bot = Bot(cache_path=True)
         self.myself = self.bot.self
-        self._signal_2.emit('成功登陆！账号：%s，可以关闭二维码了！' % self.myself.name)
+        self._signal_2.emit(self.myself.name)
         self.get_friendslist()
         self.get_chatroomslist()
 
@@ -385,7 +452,7 @@ class MyThread(QtCore.QThread):
         @self.bot.register(msg_types=TEXT,except_self=False)
         def get_msg(msg):
             fromChatroom = False
-            print(msg)
+            #print(msg)
             if msg.sender.name== self.bot.self.name:
                 # 这是我发出的消息
                 from_Name = '我'
@@ -410,14 +477,17 @@ class MyThread(QtCore.QThread):
                 if reply_robot == True:  # 机器人回复
                     myshow.tuling.do_reply(msg)
             message = from_Name + '→' + to_Name + '：' + msg.text
-            send_time = msg.create_time
+            msg_time = msg.create_time
+            send_time = time.mktime(msg_time.timetuple())
             self._signal_1.emit(fromChatroom, message, send_time)  # 信号焕发，连接 write_log
 
 
+
+
         # 私聊信息，图片、视频等
-        @self.bot.register(msg_types=[PICTURE, RECORDING, ATTACHMENT, VIDEO])
+        @self.bot.register(chats=User, msg_types=[PICTURE, RECORDING, ATTACHMENT, VIDEO])
         def download_files(msg):
-            print(msg)
+            #print(msg)
             fromChatroom = False
             if msg.sender.name == self.bot.self.name:
                 # 这是我发出的消息
@@ -449,17 +519,17 @@ class MyThread(QtCore.QThread):
             msg.get_file(msg.file_name)  # 下载文件
             os.chdir(workPath)
             message = from_Name + '→' + to_Name + '：' + '[文件: %s]' % msg.file_name
-            send_time = msg.create_time
+            msg_time = msg.create_time
+            send_time = time.mktime(msg_time.timetuple()) #datetime转时间戳
             self._signal_1.emit(fromChatroom, message, send_time)  # 信号焕发，连接 write_log
 
 
         # 群聊信息,@我的文字信息
         @self.bot.register(chats=Group,msg_types=TEXT)
         def get_msg_at(msg):
-            print(msg)
+            #print(msg)
             if msg.is_at:
-                print('333333')
-                print(msg.member.name)
+                #print(msg.member.name)
                 if reply_busy == True:
                     msg_busy = myshow.lineEdit_busy.text()
                     msg.reply(u'@%s\u2005[自动回复] %s' % (msg.member.nick_name, msg_busy))
@@ -469,7 +539,8 @@ class MyThread(QtCore.QThread):
                 chatroom_NickName = msg.chat.name
                 fromChatroom = True
                 message = '[' + chatroom_NickName + '] ' + from_Name + ' ：' + msg.text
-                send_time = msg.create_time
+                msg_time = msg.create_time
+                send_time = time.mktime(msg_time.timetuple())
                 self._signal_1.emit(fromChatroom, message, send_time)  # 信号焕发，连接 write_log
 
         embed() # 堵塞线程
@@ -478,10 +549,10 @@ class MyThread(QtCore.QThread):
     # 获取好友列表
     def get_friendslist(self):
         friends_info = self.bot.friends(update=False)
-        frinends_list = [friend.name for friend in friends_info]
-        frinends_pinyin = [''.join(lazy_pinyin(frinend)) for frinend in frinends_list]  # 根据好友列表生成拼音列表
-        dict1 = dict(zip(frinends_pinyin,frinends_list))    # 拼音列表和昵称列表并成字典,像这样 {'zhangsan':'张三','Mango':'Mango','lisi':'李四'}
-        sort1 = sorted(dict1.items(),key=lambda x:x[0].lower())   # 按拼音排序,输出 [('lisi','李四'),('zhangsan','张三')]
+        frinends_list = [friend.name for friend in friends_info] # 好友列表 ['张三','Mango','李四']
+        frinends_pinyin = [''.join(lazy_pinyin(frinend)) for frinend in frinends_list]  # 根据好友列表生成拼音列表 ['zhangsan','Mango','lisi']
+        dict1 = dict(zip(frinends_pinyin,frinends_list))    # 拼音列表和昵称列表并成字典 {'zhangsan':'张三','Mango':'Mango','lisi':'李四'}
+        sort1 = sorted(dict1.items(),key=lambda x:x[0].lower())   # 转小写拼音排序 [('lisi','李四'),('Mango','Mango'),('zhangsan','张三')]
         friends_sorted =[i[1] for i in sort1]  # ['李四','Mango','张三']
         self._signal_4.emit(friends_sorted)
 
@@ -563,13 +634,14 @@ def img_to_myself():
     now_time =  time.strftime("%y/%m/%d %H:%M:%S", timeArray)
     time_msg = '时间: [%s]' % now_time
     # 需要用时间来命名图片,所以时间信息中不能有/和:,否则报错;也不能带空格,否则发送时会报错
-    filename_time = time.strftime("%y%m%d-%H%M%S", timeArray)   
+    filename_time = time.strftime("%y%m%d_%H%M%S", timeArray)
     img_name = filename_time + '.png'
-    # 新建截图文件夹
-    isExists=os.path.exists("截图文件")
+    # 新建screenshots夹
+    isExists=os.path.exists("screenshots")
     if not isExists:
-        os.makedirs("截图文件") 
-    os.chdir("截图文件")
+        os.makedirs("screenshots") 
+    os.chdir("screenshots")
+    #print(os.getcwd())
     ImageGrab.grab().save(img_name)  # 截图并保存
     myshow.thread.bot.file_helper.send_image(img_name)  # 微信发送截图给自己
     os.chdir("..")
@@ -691,6 +763,7 @@ def reply_robot_off():
 
 
 
+
 #########################################################################################################
 # 主程序窗口,以及系统托盘
 #########################################################################################################
@@ -706,24 +779,34 @@ if __name__ == "__main__":
     reply_robot = False
     remote_pc = True
 
+
     # 在系统托盘处显示图标
     tp = QtWidgets.QSystemTrayIcon(myshow)
-    tp.setIcon(QtGui.QIcon(":img/MineWechat.ico"))
+    tp.setIcon(QtGui.QIcon(":/img/images/wechat.png"))
+
     # 设置系统托盘图标的菜单
-    a1 = QtWidgets.QAction('&显示(Show)',triggered = myshow.show)
-    def quitApp():
-        QtCore.QCoreApplication.instance().quit() # 关闭窗体程序
-        tp.setVisible(False) # 隐藏托盘,防止退出后图标残留
-    a2 = QtWidgets.QAction('&退出(Exit)',triggered = quitApp) # 直接退出可以用QtWidgets.qApp.quit ,但会残留图标直到鼠标经过
+    a1 = QtWidgets.QAction('&显示(Show)', triggered=myshow.show)
+    def quitApp():  # 退出程序
+        QtCore.QCoreApplication.instance().quit()  # 关闭窗体程序
+        tp.setVisible(False)  # 隐藏托盘,防止退出后图标残留
+    a2 = QtWidgets.QAction('&退出(Exit)', triggered=quitApp)  # 直接退出可以用QtWidgets.qApp.quit ,但会残留图标直到鼠标经过
     tpMenu = QtWidgets.QMenu()
     tpMenu.addAction(a1)
     tpMenu.addAction(a2)
     tp.setContextMenu(tpMenu)
-    tp.show() # 不调用show不会显示系统托盘
-    tp.showMessage('MineWechat','关闭程序窗口，我依然在这里！',icon=0) # 托盘信息提示,参数1：标题,参数2：内容,参数3：图标（0没有图标 1信息图标 2警告图标 3错误图标），0还是有一个小图标
+
+    # 不调用show不会显示系统托盘
+    tp.show()
+
+    # 托盘信息提示,参数1：标题,参数2：内容,参数3：图标（0没有图标 1信息图标 2警告图标 3错误图标），0还是有一个小图标
+    # tp.showMessage('MineWechat','关闭程序窗口，我依然在这里！',icon=0)
+
     # 鼠标点击托盘图标
     def act(reason):
         if reason == 2 or reason == 3:  # 鼠标点击icon传递的信号会带有一个整形的值，1是表示单击右键，2是双击，3是单击左键，4是用鼠标中键点击
+            # if reason == 2 :
             myshow.show()
     tp.activated.connect(act)
+
+
     sys.exit(app.exec_())
