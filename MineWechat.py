@@ -543,7 +543,7 @@ class MyThread(QtCore.QThread):
                 send_time = time.mktime(msg_time.timetuple())
                 self._signal_1.emit(fromChatroom, message, send_time)  # 信号焕发，连接 write_log
 
-        embed() # 堵塞线程
+        self.bot.join() # 堵塞线程，这里不要用embed()，否则pyinstaller打包无窗口会报错
 
 
     # 获取好友列表
