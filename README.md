@@ -21,9 +21,9 @@
 ## ⛺ 软件截图
 ![1.png](https://i.loli.net/2019/05/18/5cdfaf499d85c67086.png)
 ![2.png](https://i.loli.net/2019/05/18/5cdfaf49ad94664867.png)
-![3.png](https://i.loli.net/2019/05/18/5cdfaf49c5f2088321.png)
-![4.png](https://i.loli.net/2019/05/18/5cdfaf49ce0eb70500.png)
-![5.png](https://i.loli.net/2019/05/18/5cdfaf491807345648.png)
+![3.png](https://i.loli.net/2019/05/18/5cdfaf491807345648.png)
+![4.png](https://i.loli.net/2019/05/18/5cdfaf49c5f2088321.png)
+![5.png](https://i.loli.net/2019/05/18/5cdfaf49ce0eb70500.png)
 ![6.png](https://i.loli.net/2019/03/08/5c8234b6d9c58.png)
 ![7.png](https://i.loli.net/2019/03/08/5c8234b6e3a18.png)
 
@@ -46,7 +46,7 @@
   -  #机器人回复@关
 
 ## ⛔ 存在不足：
-  -  只经过简单测试
+  -  Win10_64位测试OK，Win7_64位虚拟机测试OK，Linux修改按键和cmd命令部分代码也可使用  
   -  如果其他地方登陆微信网页版，这边会掉线
   -  发送文件的文件名不可以是中文，但路径可以是中文
   -  锁定屏幕会导致部分功能失效，所以，挂机的话请关闭睡眠和锁屏
