@@ -4,10 +4,6 @@
 
 # 📢 MineWechat
 小白初学python，第一次发作品，见笑了
-- [功能简介](#功能简介)
-- [软件截图](#软件截图)
-- [软件使用](#软件使用)
-- [存在不足](#存在不足)
 
 ## ⏬ 下载试用
 [![](https://img.shields.io/badge/download-win%20完整版-blue.svg?style=for-the-badge&logo=windows)](https://github.com/PengJenas/MineWechat/releases/download/V3.5.3/MineWechat3.5.3.exe)
