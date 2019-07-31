@@ -15,7 +15,8 @@ width
 - 微信远程控制电脑
 
 ## ⛺ 软件截图
-<img src="https://i.loli.net/2019/05/18/5cdfaf499d85c67086.png"  width="400" alt=""/>
+<img src="https://i.loli.net/2019/05/18/5cdfaf499d85c67086.png"  width="500" alt=""/>
+
 ![1.png](https://i.loli.net/2019/05/18/5cdfaf499d85c67086.png)
 ![2.png](https://i.loli.net/2019/05/18/5cdfaf49ad94664867.png)
 ![3.png](https://i.loli.net/2019/05/18/5cdfaf491807345648.png)
