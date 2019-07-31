@@ -1,7 +1,7 @@
 ![python版本](https://img.shields.io/badge/python-3.6-blue.svg)
 ![操作系统](https://img.shields.io/badge/platform-win64-lightgrey.svg)
 ![版本](https://img.shields.io/github/release/PengJenas/MineWechat.svg)
-
+width
 # 📢 MineWechat
 小白初学python，第一次发作品，见笑了
 
@@ -15,6 +15,7 @@
 - 微信远程控制电脑
 
 ## ⛺ 软件截图
+<img src="https://i.loli.net/2019/05/18/5cdfaf499d85c67086.png"  width="400" alt=""/>
 ![1.png](https://i.loli.net/2019/05/18/5cdfaf499d85c67086.png)
 ![2.png](https://i.loli.net/2019/05/18/5cdfaf49ad94664867.png)
 ![3.png](https://i.loli.net/2019/05/18/5cdfaf491807345648.png)
