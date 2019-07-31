@@ -15,8 +15,6 @@ width
 - 微信远程控制电脑
 
 ## ⛺ 软件截图
-<img src="https://i.loli.net/2019/05/18/5cdfaf499d85c67086.png"  width="500" alt=""/>
-
 ![1.png](https://i.loli.net/2019/05/18/5cdfaf499d85c67086.png)
 ![2.png](https://i.loli.net/2019/05/18/5cdfaf49ad94664867.png)
 ![3.png](https://i.loli.net/2019/05/18/5cdfaf491807345648.png)
@@ -43,7 +41,7 @@ width
   -  #机器人回复开
   -  #机器人回复关
 
-## ⛔ 存在不足：
+## ⛔ 提示信息：
   -  Win10_64位测试OK，Win7_64位虚拟机测试OK，Linux修改按键和cmd命令部分代码也可使用  
   -  如果其他地方登陆微信网页版，这边会掉线
   -  发送文件的文件名不可以是中文，但路径可以是中文
