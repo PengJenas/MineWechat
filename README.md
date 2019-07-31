@@ -6,7 +6,7 @@
 小白初学python，第一次发作品，见笑了
 
 ## ⏬ 下载试用
-[![](https://img.shields.io/badge/download-win%20完整版-blue.svg?style=for-the-badge&logo=windows)](https://github.com/PengJenas/MineWechat/releases/download/V3.5.3/MineWechat3.5.3.exe)
+[![](https://img.shields.io/badge/download-win%20完整版-blue.svg?style=for-the-badge&logo=windows)](https://github.com/PengJenas/MineWechat/releases/)
 
 ## 💬 功能简介
 - 微信群发消息
@@ -36,10 +36,10 @@
   -  #控制@cmd命令                  `如：#控制@explorer c:\windows`   
   -  #最小化窗口
   -  #切换窗口
-  -  #忙碌回复@开
-  -  #忙碌回复@关
-  -  #机器人回复@开
-  -  #机器人回复@关
+  -  #忙碌回复开
+  -  #忙碌回复关
+  -  #机器人回复开
+  -  #机器人回复关
 
 ## ⛔ 存在不足：
   -  Win10_64位测试OK，Win7_64位虚拟机测试OK，Linux修改按键和cmd命令部分代码也可使用  
