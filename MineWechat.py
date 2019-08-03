@@ -6,8 +6,8 @@
 import os
 import sys
 import time
-# import win32api    # pywin32 系统api   #linux不兼容
-# import win32con    # pywin32 操作键盘  #linux不兼容
+import win32api    # pywin32 系统api,linux不兼容
+import win32con    # pywin32 操作键盘,linux不兼容
 from pypinyin import lazy_pinyin  # 好友列表按拼音排序
 import imghdr    # 识别图像格式
 from wxpy import Bot,Tuling,embed,Group,User
@@ -772,11 +772,9 @@ if __name__ == "__main__":
     reply_robot = False
     remote_pc = True
 
-
     # 在系统托盘处显示图标
     tp = QtWidgets.QSystemTrayIcon(myshow)
     tp.setIcon(QtGui.QIcon(":/img/images/wechat.png"))
-
     # 设置系统托盘图标的菜单
     a1 = QtWidgets.QAction('&显示(Show)', triggered=myshow.show)
     def quitApp():  # 退出程序
@@ -787,13 +785,10 @@ if __name__ == "__main__":
     tpMenu.addAction(a1)
     tpMenu.addAction(a2)
     tp.setContextMenu(tpMenu)
-
     # 不调用show不会显示系统托盘
     tp.show()
-
     # 托盘信息提示,参数1：标题,参数2：内容,参数3：图标（0没有图标 1信息图标 2警告图标 3错误图标），0还是有一个小图标
     # tp.showMessage('MineWechat','关闭程序窗口，我依然在这里！',icon=0)
-
     # 鼠标点击托盘图标
     def act(reason):
         if reason == 2 or reason == 3:  # 鼠标点击icon传递的信号会带有一个整形的值，1是表示单击右键，2是双击，3是单击左键，4是用鼠标中键点击
