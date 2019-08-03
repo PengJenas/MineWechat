@@ -26,7 +26,8 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">font: 75 9pt &quot;微软雅黑&quot;;
+</string>
   </property>
   <widget class="QWidget" name="verticalWidget_1" native="true">
    <property name="geometry">
@@ -53,12 +54,12 @@
     <string notr="true">QWidget#verticalWidget_1{
 background-color: rgb(67, 67, 67);
 }
-QLabel{
+QLabel#label_name{
 font: 12pt;
 color:#FFFFFF;
 padding:0px 0px 0px 4px;
 }
-QLabel:hover,QLabel:presse{
+QLabel#label_name:hover,QLabel#label_name:presse{
 background-color:rgb(160, 160, 160);
 }
 QToolButton{
@@ -245,11 +246,31 @@ background-color: rgb(180, 180, 180);
     <item>
      <widget class="QToolButton" name="toolButton_18login">
       <property name="text">
-       <string>...</string>
+       <string>扫码</string>
       </property>
       <property name="icon">
        <iconset resource="img.qrc">
         <normaloff>:/img/images/扫码.png</normaloff>:/img/images/扫码.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>30</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="toolButtonStyle">
+       <enum>Qt::ToolButtonIconOnly</enum>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QToolButton" name="toolButton_17hide">
+      <property name="text">
+       <string>隐藏</string>
+      </property>
+      <property name="icon">
+       <iconset resource="img.qrc">
+        <normaloff>:/img/images/隐藏图层.png</normaloff>:/img/images/隐藏图层.png</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -262,7 +283,7 @@ background-color: rgb(180, 180, 180);
     <item>
      <widget class="QToolButton" name="toolButton_19logout">
       <property name="text">
-       <string>...</string>
+       <string>退出</string>
       </property>
       <property name="icon">
        <iconset resource="img.qrc">
@@ -303,7 +324,7 @@ background-color: rgb(180, 180, 180);
     <string notr="true">QWidget{
 background-color: rgb(230, 230, 230);
 }
-QLineEdit{
+QLineEdit#lineEdit_search{
 font: 12pt;
 border-radius:5px;
 background-color: rgb(216, 216, 216);
@@ -320,6 +341,18 @@ padding:2px;
 }
 QToolButton#toolButton_search:hover{
 background-color:rgb(200, 200, 200);
+}
+QToolButton{
+font: 16pt;
+border-style:solid;
+border-width:0px 0px 0px 0px;
+padding:15px 60px;
+}
+QToolButton:hover{
+background-color:rgb(160, 160, 160);
+}
+QToolButton:checked{
+background-color: rgb(180, 180, 180);
 }
 QListView{
 font: 12pt;
@@ -482,6 +515,12 @@ margin:15px;
              <property name="styleSheet">
               <string notr="true"/>
              </property>
+             <property name="verticalScrollBarPolicy">
+              <enum>Qt::ScrollBarAsNeeded</enum>
+             </property>
+             <property name="horizontalScrollBarPolicy">
+              <enum>Qt::ScrollBarAsNeeded</enum>
+             </property>
             </widget>
            </item>
           </layout>
@@ -535,18 +574,7 @@ margin:15px;
            <item>
             <widget class="QWidget" name="verticalWidget_23" native="true">
              <property name="styleSheet">
-              <string notr="true">QToolButton{
-font: 16pt;
-border-style:solid;
-border-width:0px 0px 0px 0px;
-padding:15px 60px;
-}
-QToolButton:hover{
-background-color:rgb(160, 160, 160);
-}
-QToolButton:checked{
-background-color: rgb(180, 180, 180);
-}</string>
+              <string notr="true"/>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_23">
               <property name="spacing">
@@ -762,118 +790,7 @@ background-color: rgb(180, 180, 180);
     <string notr="true">QWidget#verticalWidget_3{
 background-color: rgb(245, 245, 245);
 }
-
-</string>
-   </property>
-   <layout class="QVBoxLayout" name="verticalLayout_3">
-    <property name="spacing">
-     <number>0</number>
-    </property>
-    <property name="leftMargin">
-     <number>0</number>
-    </property>
-    <property name="topMargin">
-     <number>0</number>
-    </property>
-    <property name="rightMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
-     <number>0</number>
-    </property>
-    <item>
-     <widget class="QWidget" name="horizontalWidget_31" native="true">
-      <property name="minimumSize">
-       <size>
-        <width>540</width>
-        <height>20</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>540</width>
-        <height>20</height>
-       </size>
-      </property>
-      <property name="layoutDirection">
-       <enum>Qt::LeftToRight</enum>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QToolButton{
-border-style:solid;
-border-width:0px 0px 0px 0px;
-padding:0px 8px;
-/*margin:5px;*/
-}
-QToolButton:hover{
-background-color:rgb(200, 200, 200);
-}</string>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_31">
-       <property name="spacing">
-        <number>0</number>
-       </property>
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item>
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QToolButton" name="toolButton_33hide">
-         <property name="text">
-          <string>...</string>
-         </property>
-         <property name="icon">
-          <iconset resource="img.qrc">
-           <normaloff>:/img/images/隐藏.png</normaloff>:/img/images/隐藏.png</iconset>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>30</width>
-           <height>20</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
-     <widget class="QWidget" name="verticalWidget_32" native="true">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>540</height>
-       </size>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QLabel{
+QLabel{
 font: 16pt ;
 padding:0px 16px 0px 16px;
 border-style:solid;
@@ -922,7 +839,41 @@ background-color:rgb(160, 160, 160);
 }
 QCheckBox{
 margin: 15px 0px ;
-}</string>
+}
+</string>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_3">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QWidget" name="verticalWidget_32" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>540</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_32">
        <property name="spacing">
@@ -942,8 +893,11 @@ margin: 15px 0px ;
        </property>
        <item>
         <widget class="QStackedWidget" name="stackedWidget_2">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="page_31">
           <layout class="QVBoxLayout" name="verticalLayout_5" stretch="0,0">
@@ -991,13 +945,13 @@ margin: 15px 0px ;
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
-                  <height>35</height>
+                  <height>45</height>
                  </size>
                 </property>
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
-                  <height>35</height>
+                  <height>16777215</height>
                  </size>
                 </property>
                 <property name="text">
@@ -1222,13 +1176,13 @@ margin: 15px 0px ;
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
-                  <height>35</height>
+                  <height>45</height>
                  </size>
                 </property>
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
-                  <height>35</height>
+                  <height>16777215</height>
                  </size>
                 </property>
                 <property name="text">
@@ -1298,7 +1252,7 @@ margin: 15px 0px ;
                  <x>1</x>
                  <y>1</y>
                  <width>541</width>
-                 <height>151</height>
+                 <height>161</height>
                 </rect>
                </property>
                <property name="minimumSize">
@@ -1408,13 +1362,13 @@ margin: 15px 0px ;
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
-                  <height>35</height>
+                  <height>45</height>
                  </size>
                 </property>
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
-                  <height>35</height>
+                  <height>16777215</height>
                  </size>
                 </property>
                 <property name="text">
@@ -1500,7 +1454,7 @@ border-color: rgb(200, 200, 200);
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
-                  <height>35</height>
+                  <height>45</height>
                  </size>
                 </property>
                 <property name="text">
@@ -1652,7 +1606,7 @@ border-color: rgb(200, 200, 200);
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
-                  <height>35</height>
+                  <height>45</height>
                  </size>
                 </property>
                 <property name="text">
@@ -1741,7 +1695,7 @@ background-color: rgb(245, 245, 245);
  </resources>
  <connections>
   <connection>
-   <sender>toolButton_33hide</sender>
+   <sender>toolButton_17hide</sender>
    <signal>clicked()</signal>
    <receiver>Form</receiver>
    <slot>hide()</slot>
@@ -1758,7 +1712,7 @@ background-color: rgb(245, 245, 245);
   </connection>
  </connections>
  <buttongroups>
-  <buttongroup name="buttonGroup_mid"/>
   <buttongroup name="buttonGroup_left"/>
+  <buttongroup name="buttonGroup_mid"/>
  </buttongroups>
 </ui>

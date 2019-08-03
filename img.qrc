@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="img">
+    <file>images/隐藏图层.png</file>
+    <file>images/隐藏_白.png</file>
     <file>images/MineWechat.ico</file>
     <file>images/帮助.png</file>
     <file>images/wechat.png</file>

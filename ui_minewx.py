@@ -2,12 +2,11 @@
 
 # Form implementation generated from reading ui file 'ui_minewx.ui'
 #
-# Created by: PyQt5 UI code generator 5.12.2
+# Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -15,6 +14,8 @@ class Ui_Form(object):
         Form.resize(850, 600)
         Form.setMinimumSize(QtCore.QSize(850, 600))
         Form.setMaximumSize(QtCore.QSize(850, 600))
+        Form.setStyleSheet("font: 75 9pt \"微软雅黑\";\n"
+"")
         self.verticalWidget_1 = QtWidgets.QWidget(Form)
         self.verticalWidget_1.setGeometry(QtCore.QRect(0, 0, 60, 600))
         self.verticalWidget_1.setMinimumSize(QtCore.QSize(60, 600))
@@ -22,12 +23,12 @@ class Ui_Form(object):
         self.verticalWidget_1.setStyleSheet("QWidget#verticalWidget_1{\n"
 "background-color: rgb(67, 67, 67);\n"
 "}\n"
-"QLabel{\n"
+"QLabel#label_name{\n"
 "font: 12pt;\n"
 "color:#FFFFFF;\n"
-"padding:0px 0px 0px 3px;\n"
+"padding:0px 0px 0px 4px;\n"
 "}\n"
-"QLabel:hover,QLabel:presse{\n"
+"QLabel#label_name:hover,QLabel#label_name:presse{\n"
 "background-color:rgb(160, 160, 160);\n"
 "}\n"
 "QToolButton{\n"
@@ -104,12 +105,20 @@ class Ui_Form(object):
         icon3.addPixmap(QtGui.QPixmap(":/img/images/扫码.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButton_18login.setIcon(icon3)
         self.toolButton_18login.setIconSize(QtCore.QSize(30, 30))
+        self.toolButton_18login.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
         self.toolButton_18login.setObjectName("toolButton_18login")
         self.verticalLayout_1.addWidget(self.toolButton_18login)
-        self.toolButton_19logout = QtWidgets.QToolButton(self.verticalWidget_1)
+        self.toolButton_17hide = QtWidgets.QToolButton(self.verticalWidget_1)
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(":/img/images/登出.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.toolButton_19logout.setIcon(icon4)
+        icon4.addPixmap(QtGui.QPixmap(":/img/images/隐藏图层.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.toolButton_17hide.setIcon(icon4)
+        self.toolButton_17hide.setIconSize(QtCore.QSize(30, 30))
+        self.toolButton_17hide.setObjectName("toolButton_17hide")
+        self.verticalLayout_1.addWidget(self.toolButton_17hide)
+        self.toolButton_19logout = QtWidgets.QToolButton(self.verticalWidget_1)
+        icon5 = QtGui.QIcon()
+        icon5.addPixmap(QtGui.QPixmap(":/img/images/登出.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.toolButton_19logout.setIcon(icon5)
         self.toolButton_19logout.setIconSize(QtCore.QSize(30, 30))
         self.toolButton_19logout.setObjectName("toolButton_19logout")
         self.verticalLayout_1.addWidget(self.toolButton_19logout)
@@ -120,7 +129,7 @@ class Ui_Form(object):
         self.verticalWidget_2.setStyleSheet("QWidget{\n"
 "background-color: rgb(230, 230, 230);\n"
 "}\n"
-"QLineEdit{\n"
+"QLineEdit#lineEdit_search{\n"
 "font: 12pt;\n"
 "border-radius:5px;\n"
 "background-color: rgb(216, 216, 216);\n"
@@ -137,6 +146,18 @@ class Ui_Form(object):
 "}\n"
 "QToolButton#toolButton_search:hover{\n"
 "background-color:rgb(200, 200, 200);\n"
+"}\n"
+"QToolButton{\n"
+"font: 16pt;\n"
+"border-style:solid;\n"
+"border-width:0px 0px 0px 0px;\n"
+"padding:15px 60px;\n"
+"}\n"
+"QToolButton:hover{\n"
+"background-color:rgb(160, 160, 160);\n"
+"}\n"
+"QToolButton:checked{\n"
+"background-color: rgb(180, 180, 180);\n"
 "}\n"
 "QListView{\n"
 "font: 12pt;\n"
@@ -168,9 +189,9 @@ class Ui_Form(object):
         self.lineEdit_search.setObjectName("lineEdit_search")
         self.horizontalLayout_2.addWidget(self.lineEdit_search)
         self.toolButton_search = QtWidgets.QToolButton(self.horizontalLayout_21)
-        icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap(":/img/images/搜索.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.toolButton_search.setIcon(icon5)
+        icon6 = QtGui.QIcon()
+        icon6.addPixmap(QtGui.QPixmap(":/img/images/搜索.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.toolButton_search.setIcon(icon6)
         self.toolButton_search.setIconSize(QtCore.QSize(20, 20))
         self.toolButton_search.setObjectName("toolButton_search")
         self.horizontalLayout_2.addWidget(self.toolButton_search)
@@ -197,6 +218,8 @@ class Ui_Form(object):
         self.verticalLayout.setObjectName("verticalLayout")
         self.listView_friend = QtWidgets.QListView(self.page_21)
         self.listView_friend.setStyleSheet("")
+        self.listView_friend.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        self.listView_friend.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
         self.listView_friend.setObjectName("listView_friend")
         self.verticalLayout.addWidget(self.listView_friend)
         self.stackedWidget_1.addWidget(self.page_21)
@@ -219,18 +242,7 @@ class Ui_Form(object):
         self.verticalLayout_6.setSpacing(0)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
         self.verticalWidget_23 = QtWidgets.QWidget(self.page_23)
-        self.verticalWidget_23.setStyleSheet("QToolButton{\n"
-"font: 16pt;\n"
-"border-style:solid;\n"
-"border-width:0px 0px 0px 0px;\n"
-"padding:15px 60px;\n"
-"}\n"
-"QToolButton:hover{\n"
-"background-color:rgb(160, 160, 160);\n"
-"}\n"
-"QToolButton:checked{\n"
-"background-color: rgb(180, 180, 180);\n"
-"}")
+        self.verticalWidget_23.setStyleSheet("")
         self.verticalWidget_23.setObjectName("verticalWidget_23")
         self.verticalLayout_23 = QtWidgets.QVBoxLayout(self.verticalWidget_23)
         self.verticalLayout_23.setContentsMargins(0, 0, 0, 0)
@@ -244,9 +256,9 @@ class Ui_Form(object):
         self.toolButton_21remote.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.toolButton_21remote.setAutoFillBackground(False)
         self.toolButton_21remote.setInputMethodHints(QtCore.Qt.ImhNone)
-        icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap(":/img/images/远程协助.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.toolButton_21remote.setIcon(icon6)
+        icon7 = QtGui.QIcon()
+        icon7.addPixmap(QtGui.QPixmap(":/img/images/远程协助.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.toolButton_21remote.setIcon(icon7)
         self.toolButton_21remote.setIconSize(QtCore.QSize(25, 25))
         self.toolButton_21remote.setCheckable(True)
         self.toolButton_21remote.setChecked(False)
@@ -261,9 +273,9 @@ class Ui_Form(object):
         self.toolButton_22reply = QtWidgets.QToolButton(self.verticalWidget_23)
         self.toolButton_22reply.setMinimumSize(QtCore.QSize(250, 60))
         self.toolButton_22reply.setMaximumSize(QtCore.QSize(250, 60))
-        icon7 = QtGui.QIcon()
-        icon7.addPixmap(QtGui.QPixmap(":/img/images/回复.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.toolButton_22reply.setIcon(icon7)
+        icon8 = QtGui.QIcon()
+        icon8.addPixmap(QtGui.QPixmap(":/img/images/回复.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.toolButton_22reply.setIcon(icon8)
         self.toolButton_22reply.setIconSize(QtCore.QSize(25, 25))
         self.toolButton_22reply.setCheckable(True)
         self.toolButton_22reply.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
@@ -273,9 +285,9 @@ class Ui_Form(object):
         self.toolButton_23help = QtWidgets.QToolButton(self.verticalWidget_23)
         self.toolButton_23help.setMinimumSize(QtCore.QSize(250, 60))
         self.toolButton_23help.setMaximumSize(QtCore.QSize(250, 60))
-        icon8 = QtGui.QIcon()
-        icon8.addPixmap(QtGui.QPixmap(":/img/images/帮助.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.toolButton_23help.setIcon(icon8)
+        icon9 = QtGui.QIcon()
+        icon9.addPixmap(QtGui.QPixmap(":/img/images/帮助.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.toolButton_23help.setIcon(icon9)
         self.toolButton_23help.setIconSize(QtCore.QSize(25, 25))
         self.toolButton_23help.setCheckable(True)
         self.toolButton_23help.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
@@ -295,45 +307,7 @@ class Ui_Form(object):
         self.verticalWidget_3.setStyleSheet("QWidget#verticalWidget_3{\n"
 "background-color: rgb(245, 245, 245);\n"
 "}\n"
-"\n"
-"")
-        self.verticalWidget_3.setObjectName("verticalWidget_3")
-        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.verticalWidget_3)
-        self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout_3.setSpacing(0)
-        self.verticalLayout_3.setObjectName("verticalLayout_3")
-        self.horizontalWidget_31 = QtWidgets.QWidget(self.verticalWidget_3)
-        self.horizontalWidget_31.setMinimumSize(QtCore.QSize(540, 20))
-        self.horizontalWidget_31.setMaximumSize(QtCore.QSize(540, 20))
-        self.horizontalWidget_31.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.horizontalWidget_31.setStyleSheet("QToolButton{\n"
-"border-style:solid;\n"
-"border-width:0px 0px 0px 0px;\n"
-"padding:0px 8px;\n"
-"/*margin:5px;*/\n"
-"}\n"
-"QToolButton:hover{\n"
-"background-color:rgb(200, 200, 200);\n"
-"}")
-        self.horizontalWidget_31.setObjectName("horizontalWidget_31")
-        self.horizontalLayout_31 = QtWidgets.QHBoxLayout(self.horizontalWidget_31)
-        self.horizontalLayout_31.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_31.setSpacing(0)
-        self.horizontalLayout_31.setObjectName("horizontalLayout_31")
-        spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_31.addItem(spacerItem3)
-        self.toolButton_33hide = QtWidgets.QToolButton(self.horizontalWidget_31)
-        icon9 = QtGui.QIcon()
-        icon9.addPixmap(QtGui.QPixmap(":/img/images/隐藏.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.toolButton_33hide.setIcon(icon9)
-        self.toolButton_33hide.setIconSize(QtCore.QSize(30, 20))
-        self.toolButton_33hide.setObjectName("toolButton_33hide")
-        self.horizontalLayout_31.addWidget(self.toolButton_33hide)
-        self.verticalLayout_3.addWidget(self.horizontalWidget_31)
-        self.verticalWidget_32 = QtWidgets.QWidget(self.verticalWidget_3)
-        self.verticalWidget_32.setMinimumSize(QtCore.QSize(0, 0))
-        self.verticalWidget_32.setMaximumSize(QtCore.QSize(16777215, 540))
-        self.verticalWidget_32.setStyleSheet("QLabel{\n"
+"QLabel{\n"
 "font: 16pt ;\n"
 "padding:0px 16px 0px 16px;\n"
 "border-style:solid;\n"
@@ -382,13 +356,24 @@ class Ui_Form(object):
 "}\n"
 "QCheckBox{\n"
 "margin: 15px 0px ;\n"
-"}")
+"}\n"
+"")
+        self.verticalWidget_3.setObjectName("verticalWidget_3")
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.verticalWidget_3)
+        self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_3.setSpacing(0)
+        self.verticalLayout_3.setObjectName("verticalLayout_3")
+        self.verticalWidget_32 = QtWidgets.QWidget(self.verticalWidget_3)
+        self.verticalWidget_32.setMinimumSize(QtCore.QSize(0, 0))
+        self.verticalWidget_32.setMaximumSize(QtCore.QSize(16777215, 540))
+        self.verticalWidget_32.setStyleSheet("")
         self.verticalWidget_32.setObjectName("verticalWidget_32")
         self.verticalLayout_32 = QtWidgets.QVBoxLayout(self.verticalWidget_32)
         self.verticalLayout_32.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_32.setSpacing(0)
         self.verticalLayout_32.setObjectName("verticalLayout_32")
         self.stackedWidget_2 = QtWidgets.QStackedWidget(self.verticalWidget_32)
+        self.stackedWidget_2.setStyleSheet("")
         self.stackedWidget_2.setObjectName("stackedWidget_2")
         self.page_31 = QtWidgets.QWidget()
         self.page_31.setObjectName("page_31")
@@ -404,8 +389,8 @@ class Ui_Form(object):
         self.verticalLayout_8.setSpacing(0)
         self.verticalLayout_8.setObjectName("verticalLayout_8")
         self.label_text_friend = QtWidgets.QLabel(self.verticalWidget)
-        self.label_text_friend.setMinimumSize(QtCore.QSize(0, 35))
-        self.label_text_friend.setMaximumSize(QtCore.QSize(16777215, 35))
+        self.label_text_friend.setMinimumSize(QtCore.QSize(0, 45))
+        self.label_text_friend.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.label_text_friend.setObjectName("label_text_friend")
         self.verticalLayout_8.addWidget(self.label_text_friend)
         self.textEdit_friend_record = QtWidgets.QTextEdit(self.verticalWidget)
@@ -468,8 +453,8 @@ class Ui_Form(object):
         self.verticalLayout_10.setSpacing(0)
         self.verticalLayout_10.setObjectName("verticalLayout_10")
         self.label_text_chatroom = QtWidgets.QLabel(self.verticalWidget_4)
-        self.label_text_chatroom.setMinimumSize(QtCore.QSize(0, 35))
-        self.label_text_chatroom.setMaximumSize(QtCore.QSize(16777215, 35))
+        self.label_text_chatroom.setMinimumSize(QtCore.QSize(0, 45))
+        self.label_text_chatroom.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.label_text_chatroom.setObjectName("label_text_chatroom")
         self.verticalLayout_10.addWidget(self.label_text_chatroom)
         self.textEdit_chatroom_record = QtWidgets.QTextEdit(self.verticalWidget_4)
@@ -489,7 +474,7 @@ class Ui_Form(object):
         self.pushButton_text_chatroom.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.pushButton_text_chatroom.setObjectName("pushButton_text_chatroom")
         self.textEdit_text_chatroom = QtWidgets.QTextEdit(self.tab_5)
-        self.textEdit_text_chatroom.setGeometry(QtCore.QRect(1, 1, 541, 151))
+        self.textEdit_text_chatroom.setGeometry(QtCore.QRect(1, 1, 541, 161))
         self.textEdit_text_chatroom.setMinimumSize(QtCore.QSize(0, 0))
         self.textEdit_text_chatroom.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.textEdit_text_chatroom.setObjectName("textEdit_text_chatroom")
@@ -524,8 +509,8 @@ class Ui_Form(object):
         self.verticalLayout_9.setSpacing(0)
         self.verticalLayout_9.setObjectName("verticalLayout_9")
         self.label_text_friend_2 = QtWidgets.QLabel(self.verticalWidget1)
-        self.label_text_friend_2.setMinimumSize(QtCore.QSize(0, 35))
-        self.label_text_friend_2.setMaximumSize(QtCore.QSize(16777215, 35))
+        self.label_text_friend_2.setMinimumSize(QtCore.QSize(0, 45))
+        self.label_text_friend_2.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.label_text_friend_2.setObjectName("label_text_friend_2")
         self.verticalLayout_9.addWidget(self.label_text_friend_2)
         self.checkBox_remote = QtWidgets.QCheckBox(self.verticalWidget1)
@@ -560,7 +545,7 @@ class Ui_Form(object):
         self.verticalLayout_12.setSpacing(0)
         self.verticalLayout_12.setObjectName("verticalLayout_12")
         self.label = QtWidgets.QLabel(self.verticalWidget_5)
-        self.label.setMinimumSize(QtCore.QSize(0, 35))
+        self.label.setMinimumSize(QtCore.QSize(0, 45))
         self.label.setObjectName("label")
         self.verticalLayout_12.addWidget(self.label)
         self.checkBox_busy = QtWidgets.QCheckBox(self.verticalWidget_5)
@@ -582,8 +567,8 @@ class Ui_Form(object):
         self.lineEdit_busy.setMinimumSize(QtCore.QSize(420, 30))
         self.lineEdit_busy.setObjectName("lineEdit_busy")
         self.verticalLayout_12.addWidget(self.lineEdit_busy, 0, QtCore.Qt.AlignHCenter)
-        spacerItem4 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
-        self.verticalLayout_12.addItem(spacerItem4)
+        spacerItem3 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
+        self.verticalLayout_12.addItem(spacerItem3)
         self.checkBox_robot = QtWidgets.QCheckBox(self.verticalWidget_5)
         self.checkBox_robot.setMinimumSize(QtCore.QSize(460, 0))
         self.checkBox_robot.setFocusPolicy(QtCore.Qt.TabFocus)
@@ -591,8 +576,8 @@ class Ui_Form(object):
         self.checkBox_robot.setAutoRepeat(False)
         self.checkBox_robot.setObjectName("checkBox_robot")
         self.verticalLayout_12.addWidget(self.checkBox_robot, 0, QtCore.Qt.AlignHCenter)
-        spacerItem5 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout_12.addItem(spacerItem5)
+        spacerItem4 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout_12.addItem(spacerItem4)
         self.verticalLayout_16.addWidget(self.verticalWidget_5)
         self.stackedWidget_2.addWidget(self.page_34)
         self.page_35 = QtWidgets.QWidget()
@@ -608,7 +593,7 @@ class Ui_Form(object):
         self.verticalLayout_13.setSpacing(0)
         self.verticalLayout_13.setObjectName("verticalLayout_13")
         self.label_2 = QtWidgets.QLabel(self.verticalWidget_13)
-        self.label_2.setMinimumSize(QtCore.QSize(0, 35))
+        self.label_2.setMinimumSize(QtCore.QSize(0, 45))
         self.label_2.setObjectName("label_2")
         self.verticalLayout_13.addWidget(self.label_2)
         self.textEdit_help = QtWidgets.QTextEdit(self.verticalWidget_13)
@@ -643,11 +628,11 @@ class Ui_Form(object):
         self.verticalLayout_3.addWidget(self.verticalWidget_33)
 
         self.retranslateUi(Form)
-        self.stackedWidget_1.setCurrentIndex(2)
-        self.stackedWidget_2.setCurrentIndex(0)
+        self.stackedWidget_1.setCurrentIndex(0)
+        self.stackedWidget_2.setCurrentIndex(1)
         self.tabWidget_friend.setCurrentIndex(0)
         self.tabWidget_chatroom.setCurrentIndex(0)
-        self.toolButton_33hide.clicked.connect(Form.hide)
+        self.toolButton_17hide.clicked.connect(Form.hide)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
@@ -657,13 +642,13 @@ class Ui_Form(object):
         self.toolButton_11friend.setText(_translate("Form", "..."))
         self.toolButton_12chatroom.setText(_translate("Form", "..."))
         self.toolButton_13more.setText(_translate("Form", "..."))
-        self.toolButton_18login.setText(_translate("Form", "..."))
-        self.toolButton_19logout.setText(_translate("Form", "..."))
+        self.toolButton_18login.setText(_translate("Form", "扫码"))
+        self.toolButton_17hide.setText(_translate("Form", "隐藏"))
+        self.toolButton_19logout.setText(_translate("Form", "退出"))
         self.toolButton_search.setText(_translate("Form", "..."))
         self.toolButton_21remote.setText(_translate("Form", " 远程控制"))
         self.toolButton_22reply.setText(_translate("Form", " 自动回复"))
         self.toolButton_23help.setText(_translate("Form", " 帮助信息"))
-        self.toolButton_33hide.setText(_translate("Form", "..."))
         self.label_text_friend.setText(_translate("Form", "好友昵称"))
         self.textEdit_text_friend.setPlaceholderText(_translate("Form", "输入消息..."))
         self.pushButton_text_helper.setText(_translate("Form", "发送至助手"))
@@ -687,6 +672,5 @@ class Ui_Form(object):
         self.label_busy.setText(_translate("Form", "编辑回复内容："))
         self.checkBox_robot.setText(_translate("Form", "机器人回复"))
         self.label_2.setText(_translate("Form", "帮助信息"))
-
 
 import img_rc

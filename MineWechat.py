@@ -1,21 +1,19 @@
 # -*- coding: utf-8 -*-
 # Author: Jenas
+# Date: 2019-07-31
 
 
 import os
+import sys
 import time
-import win32api    # pywin32 系统api   #linux不兼容
-import win32con    # pywin32 操作键盘  #linux不兼容
-from PIL import ImageGrab    # pillow 截图用
+# import win32api    # pywin32 系统api   #linux不兼容
+# import win32con    # pywin32 操作键盘  #linux不兼容
 from pypinyin import lazy_pinyin  # 好友列表按拼音排序
 import imghdr    # 识别图像格式
 from wxpy import Bot,Tuling,embed,Group,User
 from wxpy import  TEXT, ATTACHMENT, PICTURE, RECORDING, VIDEO    #, CARD, FRIENDS, MAP, SHARING # 各种消息类型
 from PyQt5 import QtCore, QtGui, QtWidgets
-
-from ui_minewx import Ui_Form    # 程序UI
-import img_rc    # 程序图标文件
-
+from ui_minewx import Ui_Form    # 程序UI文件
 
 
 #########################################################################################################
@@ -31,33 +29,28 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)  # 没有标题栏
         self.setWindowOpacity(0.95) # 透明
 
-
-
         # 初始化标签、文本框提示,禁用不需要输入的文本框
-        self.output_info("请点击左侧的“扫码登录”按钮！")
+        self.output_info("请点击左侧的扫码按钮！")
         self.lineEdit_busy.setText("您好，我现在忙，不方便回复您！有事请留言！[微笑]")
         self.lineEdit_file_dir.setEnabled(False)
         self.lineEdit_file_dir_1.setEnabled(False)
-        # 点击button联动stackedWidget对应页面
+        
+        # 点击左侧按钮联动stackedWidget对应页面
         self.toolButton_11friend.clicked.connect(lambda: self.stackedWidget_1.setCurrentIndex(0))
         self.toolButton_11friend.clicked.connect(lambda: self.stackedWidget_2.setCurrentIndex(0))
         self.toolButton_12chatroom.clicked.connect(lambda: self.stackedWidget_1.setCurrentIndex(1))
         self.toolButton_12chatroom.clicked.connect(lambda: self.stackedWidget_2.setCurrentIndex(1))
-        # 更多功能中，还对应三个按钮
         self.toolButton_13more.clicked.connect(lambda: self.stackedWidget_1.setCurrentIndex(2))
-        #self.toolButton_13more.clicked.connect(lambda: self.stackedWidget_2.setCurrentIndex(3))
-        def btn_more_clicked():
+        def btn_more_clicked():   # 更多功能中，还对应三个按钮
             if self.toolButton_21remote.isChecked():
-                #print('按钮的isChecked返回True/False')
                 self.stackedWidget_2.setCurrentIndex(2)
-            if self.toolButton_22reply.isChecked():
+            elif self.toolButton_22reply.isChecked():
                 self.stackedWidget_2.setCurrentIndex(3)
             elif self.toolButton_23help.isChecked():
                 self.stackedWidget_2.setCurrentIndex(4)
             else:
                 self.stackedWidget_2.setCurrentIndex(2)
         self.toolButton_13more.clicked.connect(btn_more_clicked)
-
         self.toolButton_21remote.clicked.connect(lambda: self.stackedWidget_2.setCurrentIndex(2))
         self.toolButton_22reply.clicked.connect(lambda: self.stackedWidget_2.setCurrentIndex(3))
         self.toolButton_23help.clicked.connect(lambda: self.stackedWidget_2.setCurrentIndex(4))
@@ -66,7 +59,6 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         self.toolButton_18login.clicked.connect(self.login)
         self.toolButton_19logout.clicked.connect(self.logout)
         self.toolButton_search.clicked.connect(lambda: self.lineEdit_search.setText("该功能尚未启用！"))
-
         self.pushButton_text_helper.clicked.connect(self.text_to_helper)
         self.pushButton_text_friend.clicked.connect(self.text_to_friend)
         self.pushButton_text_chatroom.clicked.connect(self.text_to_chatroom)
@@ -80,7 +72,8 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         self.checkBox_busy.stateChanged.connect(self.check_busy) 
         self.checkBox_robot.stateChanged.connect(self.check_robot)
         self.checkBox_remote.stateChanged.connect(self.check_remote)
-        # 登陆微信前,使按钮失效  
+
+        # 登陆微信前,使按钮失效
         #self.toolButton_19logout.setEnabled(False)
         self.pushButton_text_helper.setEnabled(False)
         self.pushButton_text_friend.setEnabled(False)
@@ -92,14 +85,15 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         self.pushButton_file_chatroom.setEnabled(False)
 
         # 提示信息
-        text_help = '\n'
-        text_help += '========== ★ 感谢使用 MineWechat V4.0 ★ ==========  By Jenas\n\n'
-        text_help += '1. 作者是初学者，程序尚有很多Bug，请多包涵，欢迎反馈！\n\n'
-        text_help += '2. 好友、群聊列表支持 Ctrl、Shift 多选，双击清空选择。\n\n'
-        text_help += '3. 获取微信远控指令：手机微信编辑“#帮助”发送至“文件传输助手”。\n\n'
-        text_help += '4. 发送文件的文件名不可以是中文，但路径可以是中文。\n\n'
-        text_help += '5. 锁定屏幕会导致部分功能失效，所以，挂机的话请关闭睡眠和锁屏。\n\n'
-        text_help += '6. 想起来再补……'
+        text_help = '\n' \
+                    '========== ★ 感谢使用 MineWechat V4.1 ★ ==========  By Jenas\n\n' \
+                    '1. 作者只是初学者，程序尚有很多Bug，请多包涵，欢迎反馈！\n\n' \
+                    '2. 好友、群聊列表支持 Ctrl、Shift 多选，双击清空选择。\n\n' \
+                    '3. 获取微信远控指令：手机微信编辑“#帮助”发送至“文件传输助手”。\n\n' \
+                    '4. 发送文件的文件名不可以是中文，但路径可以包含中文。\n\n' \
+                    '5. 关闭或隐藏窗口后，可以在系统托盘中打开程序界面。\n\n' \
+                    '6. 锁定屏幕会导致部分功能失效，所以，挂机的话请关闭睡眠和锁屏。\n\n' \
+                    '7. 想起来再补……'
         self.textEdit_help.setText(text_help)
 
 
@@ -121,13 +115,11 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
 
 
+    ####################################################
+    # 包含：登陆、注销、系统信息、好友列表
+    ####################################################
 
-
-############################################################################################
-# 包含：登陆、注销、系统信息、好友列表
-############################################################################################
-
-    # 获取当前时间戳,并转格式,外面再套上方括号，就像这样：[18/09/17 18:12:38]
+    # 获取当前时间戳,并转格式
     def get_now_time(self):     
         now_time = time.strftime("%m-%d %H:%M:%S")
         time_msg = '[%s]' % now_time
@@ -141,13 +133,13 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
     # 登陆按钮
     def login(self):
         self.thread = MyThread()    # 创建线程
-        # 线程的信号槽，依次关联：写微信聊天记录、写系统信息、写微信远控信息、更新好友列表、更新群聊列表
+        # 线程的信号槽，依次关联：写微信聊天记录、获取微信用户名、写微信远控信息、更新好友列表、更新群聊列表、截图
         self.thread._signal_1.connect(self.write_log)
-        #self.thread._signal_2.connect(self.output_info)
         self.thread._signal_2.connect(self.get_username)
         self.thread._signal_3.connect(self.output_remote_info)
         self.thread._signal_4.connect(self.update_friends)
         self.thread._signal_5.connect(self.update_chatrooms)
+        self.thread._signal_6.connect(self.screenshot)
         self.thread.start()    # 开始线程
 
     # 注销退出按钮
@@ -156,7 +148,7 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         # time.sleep(0.2)
         quitApp()#底部托盘的方法
 
-    # 用户名
+    # 微信用户名
     def get_username(self,username):
         self.username = username
         self.label_name.setText(self.username)
@@ -187,8 +179,6 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         self.listView_friend.clicked.connect(self.friends_clicked)
         self.listView_friend.doubleClicked.connect(self.listView_friend.clearSelection)
 
-
-
     # 点击左侧好友列表
     def friends_clicked(self):
         friends_clicked_name = ''
@@ -200,7 +190,7 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         num =len(friends_clicked_list)
         if num > 1:
             friends_num = friends_clicked_name + '共计['+str(num)+']人'
-            self.label_text_friend.setStyleSheet("QLabel#label_text_friend{font: 10pt;}")
+            self.label_text_friend.setStyleSheet("QLabel#label_text_friend{font: 10pt;}") # 多选好友时，字号变小
         else:
             friends_num = friends_clicked_name
             self.label_text_friend.setStyleSheet("QLabel#label_text_friend{font: 16pt;}")
@@ -235,11 +225,22 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
             self.label_text_chatroom.setStyleSheet("QLabel#label_text_chatroom{font: 16pt;}")
         self.label_text_chatroom.setText(chatrooms_num)
         return chatrooms_clicked_list
+    
+    # pyqt5截图
+    def screenshot(self,img_name):
+        # print('截图')
+        # 新建screenshot文件夹，并cd进入
+        isPathExist = os.path.exists("screenshot")
+        if not isPathExist:
+            os.makedirs("screenshot")
+        os.chdir("screenshot")
+        #pyqt5的截图在子进程中会报错，试试用信号通知主线程截图，可行。
+        QtWidgets.QApplication.primaryScreen().grabWindow(QtWidgets.QApplication.desktop().winId()).save(img_name)
 
 
-###############################################################################
-# 功能选项,及远控信息
-###############################################################################
+    #############################################
+    # 功能选项,及远控信息
+    #############################################
 
     # 微信忙碌回复功能开关
     def check_busy(self):
@@ -286,9 +287,9 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         self.textEdit_remote.append(time_msg+' '+message)
 
 
-#######################################################################################
-# 微信发送文字、文件
-#######################################################################################
+    ######################################
+    # 微信发送文字、文件
+    ######################################
     
     # 记录聊天信息,包含：发送信息、接收信息
     # 参数:是否群聊，消息内容，消息时间, 依次类型: bool,str,int
@@ -356,14 +357,14 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         self.lineEdit_file_dir_1.setText(file_name)
     
     # 发送文件给谁
-    def file_to_who(self,file_name):
+    def file_to_who(self,somebody):
         file_send = self.lineEdit_file_dir.text()
         send_OK = False  # 是否发送成功
         try:
             if imghdr.what(file_send):  # 判断文件是否是图片格式
-                file_name.send_image(file_send)
+                somebody.send_image(file_send)
             else:
-                file_name.send_file(file_send)
+                somebody.send_file(file_send)
             send_OK = True
         except:
             self.output_info("发送文件失败!请检查文件的路径!") #wxpy 发送文件失败，升级itchat就能解决
@@ -430,9 +431,10 @@ class MyThread(QtCore.QThread):
     _signal_3 = QtCore.pyqtSignal(str)             # 定义信号，用于记录远控信息
     _signal_4 = QtCore.pyqtSignal(list)            # 定义信号，用于记录好友列表
     _signal_5 = QtCore.pyqtSignal(list)            # 定义信号，用于记录群聊列表
+    _signal_6 = QtCore.pyqtSignal(str)             # 定义信号，用于截图
+
     def __int__(self, parent=None):
         super(MyThread, self).__init__()
-
 
     def run(self):
         self.bot = Bot(cache_path=True)
@@ -441,9 +443,9 @@ class MyThread(QtCore.QThread):
         self.get_friendslist()
         self.get_chatroomslist()
 
-        ##########################################################
-        # 处理微信信息
-        ##########################################################
+        ############################
+        # 处理接受到的微信消息
+        ############################
         # @self.bot.register(msg_types=TEXT,except_self=False)
         # def just_print(msg):
         #     print(msg)
@@ -453,17 +455,17 @@ class MyThread(QtCore.QThread):
         def get_msg(msg):
             fromChatroom = False
             #print(msg)
-            if msg.sender.name== self.bot.self.name:
+            if msg.sender.name== self.myself.name:
                 # 这是我发出的消息
                 from_Name = '我'
                 if msg.receiver.name == '文件传输助手':
                     to_Name = '助手'
                     if '#' in msg.text and remote_pc == True:  # 执行命令条件：1发给助手 2命令中带井号 3远控开启
                         do_what = msg.text.split('#')[1]  # 以#分割，取第二个元素，即：具体指令。
-                        wechat_do(do_what)  # 调用微信远控的方法
+                        self.wechat_do(do_what)  # 调用微信远控的方法
                 else:
                     to_Name = msg.chat.name
-            elif msg.receiver.name == self.bot.self.name:
+            elif msg.receiver.name == self.myself.name:
                 # 这是别人发给我的
                 to_Name = '我'
                 if msg.sender.name == '文件传输助手':
@@ -475,13 +477,12 @@ class MyThread(QtCore.QThread):
                     msg_busy = myshow.lineEdit_busy.text()
                     msg.reply('[自动回复] %s' % msg_busy)
                 if reply_robot == True:  # 机器人回复
-                    myshow.tuling.do_reply(msg)
+                    myshow.tuling.do_reply(msg) # 调用图灵机器人回复
             message = from_Name + '→' + to_Name + '：' + msg.text
             msg_time = msg.create_time
-            send_time = time.mktime(msg_time.timetuple())
+            #print(msg_time,type(msg_time),str(msg_time))  # wxpy的时间格式是datetime
+            send_time = time.mktime(msg_time.timetuple()) #datetime转时间戳
             self._signal_1.emit(fromChatroom, message, send_time)  # 信号焕发，连接 write_log
-
-
 
 
         # 私聊信息，图片、视频等
@@ -489,14 +490,14 @@ class MyThread(QtCore.QThread):
         def download_files(msg):
             #print(msg)
             fromChatroom = False
-            if msg.sender.name == self.bot.self.name:
+            if msg.sender.name == self.myself.name:
                 # 这是我发出的消息
                 from_Name = '我'
                 if msg.receiver.name == '文件传输助手':
                     to_Name = '助手'
                 else:
                     to_Name = msg.chat.name
-            elif msg.receiver.name == self.bot.self.name:
+            elif msg.receiver.name == self.myself.name:
                 # 这是别人发给我的
                 to_Name = '我'
                 if msg.sender.name == '文件传输助手':
@@ -535,8 +536,8 @@ class MyThread(QtCore.QThread):
                     msg.reply(u'@%s\u2005[自动回复] %s' % (msg.member.nick_name, msg_busy))
                 if reply_robot == True:
                     myshow.tuling.do_reply(msg)
-                from_Name = msg.member.name
-                chatroom_NickName = msg.chat.name
+                from_Name = msg.member.name # 成员名
+                chatroom_NickName = msg.chat.name #群聊名
                 fromChatroom = True
                 message = '[' + chatroom_NickName + '] ' + from_Name + ' ：' + msg.text
                 msg_time = msg.create_time
@@ -544,6 +545,7 @@ class MyThread(QtCore.QThread):
                 self._signal_1.emit(fromChatroom, message, send_time)  # 信号焕发，连接 write_log
 
         self.bot.join() # 堵塞线程，这里不要用embed()，否则pyinstaller打包无窗口会报错
+
 
 
     # 获取好友列表
@@ -564,203 +566,194 @@ class MyThread(QtCore.QThread):
 
 
 
-#########################################################################################################
-# 微信远程控制
-#########################################################################################################
+    #######################################
+    # 微信远程控制
+    #######################################
 
-def wechat_do(do_what):
-    '''判断并执行具体指令，格式为：命令@参数'''
-    myshow.thread._signal_3.emit('[接收指令] ' + do_what)
-    if '@' not in do_what:  # 不带参数的指令
-        if do_what == '帮助':
-            read_me()
-        elif do_what == '截图':
-            img_to_myself()
-        elif do_what == '关机':
-            shutdown_pc()
-        elif do_what == '取消关机':
-            cancel_shutdown()
-        elif do_what == '关闭网页':
-            close_browser()
-        elif do_what == '最小化窗口':
-            send_win_d()
-        elif do_what == '切换窗口':
-            send_alt_tab()
-    elif '@' in do_what:  # 带参数的指令
-        do_cmd = do_what.split('@')[1]  # @分割，取第二个元素，即：指令的参数
-        if '打开@' in do_what:
-            run_file(do_cmd)  # 打开文件或程序
-        elif '关闭@' in do_what:
-            shutdown_process(do_cmd)  # 关闭进程
-        elif '网页@' in do_what:
-            open_web(do_cmd)  # 打开网页
-        elif '控制@' in do_what:
-            more_cmd(do_cmd)  # 执行更多cmd命令
-        elif '忙碌回复@开' in do_what:
-            reply_busy_on()   # 打开忙碌回复
-        elif '忙碌回复@关' in do_what:
-            reply_busy_off()      # 打开忙碌回复
-        elif '机器人回复@开' in do_what:
-            reply_robot_on()      # 打开忙碌回复
-        elif '机器人回复@关' in do_what:
-            reply_robot_off()     # 打开忙碌回复
+    def wechat_do(self, do_what):
+        '''判断并执行具体指令，格式为：命令@参数'''
+        self._signal_3.emit('[接收指令] ' + do_what)
+        remote_switch = {
+            '帮助':self.read_me,
+            '截图':self.img_to_myself,
+            '关机':self.shutdown_pc,
+            '取消关机':self.cancel_shutdown,
+            '关闭网页':self.close_browser,
+            '最小化窗口':self.send_win_d,
+            '切换窗口':self.send_alt_tab,
+            '打开':self.run_file,
+            '关闭':self.shutdown_process,
+            '网页':self.open_web,
+            '控制':self.more_cmd,
+            '忙碌回复开':self.reply_busy_on,
+            '忙碌回复关':self.reply_busy_off,
+            '机器人回复开':self.reply_robot_on,
+            '机器人回复关':self.reply_robot_off
+        }
+        if '@' not in do_what:  # 不带参数的指令
+            try:
+                remote_switch[do_what]()
+            except:
+                pass
+        elif '@' in do_what:  # 带参数的指令
+            do_at_1 = do_what.split('@')[0]  # @分割，取第一个元素，即：指令
+            do_at_2 = do_what.split('@')[1]  # 指令的参数
+            try:
+                remote_switch[do_at_1](do_at_2)
+            except:
+                pass
 
 
+    def read_me(self):
+        '''帮助信息'''
+        readme_msg = '[帮助信息] 指令示例：\n' \
+                     '#帮助\n' \
+                     '#截图\n' \
+                     '#关机\n' \
+                     '#取消关机\n' \
+                     '#打开@d:\\abc.txt\n' \
+                     '#关闭@notepad\n' \
+                     '#网页@www.baidu.com\n' \
+                     '#关闭网页\n' \
+                     '#控制@explorer c:\\windows\n' \
+                     '#最小化窗口\n' \
+                     '#切换窗口\n' \
+                     '#忙碌回复开\n' \
+                     '#忙碌回复关\n' \
+                     '#机器人回复开\n' \
+                     '#机器人回复关\n'
+        self.bot.file_helper.send(readme_msg)        # 发送帮助信息
+        self._signal_3.emit('[远控信息] 已发送帮助信息')
 
-def read_me():
-    '''帮助信息'''
-    readme_msg = '[帮助信息] 指令示例：\n'
-    readme_msg += '#帮助\n'
-    readme_msg += '#截图\n'
-    readme_msg += '#关机\n'
-    readme_msg += '#取消关机\n'
-    readme_msg += '#打开@d:\\abc.txt\n'
-    readme_msg += '#关闭@notepad\n'
-    readme_msg += '#网页@www.baidu.com\n'
-    readme_msg += '#关闭网页\n'
-    readme_msg += r'#控制@explorer c:\windows'+'\n'
-    readme_msg += '#最小化窗口\n'
-    readme_msg += '#切换窗口\n'
-    readme_msg += '#忙碌回复@开\n'
-    readme_msg += '#忙碌回复@关\n'
-    readme_msg += '#机器人回复@开\n'
-    readme_msg += '#机器人回复@关\n'
-    myshow.thread.bot.file_helper.send(readme_msg)        # 发送帮助信息
-    myshow.thread._signal_3.emit('[远控信息] 已发送帮助信息')
+    def img_to_myself(self):
+        '''截图并发送'''
+        timeArray = time.localtime(time.time())
+        now_time =  time.strftime("%y/%m/%d %H:%M:%S", timeArray)
+        time_msg = '时间: [%s]' % now_time
+        filename_time = time.strftime("%y%m%d_%H%M%S", timeArray) # 用时间来命名图片,格式中不能有/ : 和空格
+        img_name = filename_time + '.png'
+        self._signal_6.emit(img_name) # 信号通知主线程截图
+        QtCore.QThread.sleep(1)  # 等一下，等主线程截图...
+        isImgExist = os.path.exists(img_name)  # 是否存在
+        if not isImgExist:
+            QtCore.QThread.sleep(1)   # 再等一等......
+        self.bot.file_helper.send_image(img_name)  # 微信发送截图给自己
+        os.chdir(current_path)
+        # print(os.getcwd())
+        self.bot.file_helper.send(time_msg)  # 发送消息，截图时间
+        self._signal_3.emit('[远控信息] 已发送截图')
 
-def img_to_myself():
-    '''截图并发送'''
-    timeArray = time.localtime(time.time())
-    now_time =  time.strftime("%y/%m/%d %H:%M:%S", timeArray)
-    time_msg = '时间: [%s]' % now_time
-    # 需要用时间来命名图片,所以时间信息中不能有/和:,否则报错;也不能带空格,否则发送时会报错
-    filename_time = time.strftime("%y%m%d_%H%M%S", timeArray)
-    img_name = filename_time + '.png'
-    # 新建screenshots夹
-    isExists=os.path.exists("screenshots")
-    if not isExists:
-        os.makedirs("screenshots") 
-    os.chdir("screenshots")
-    #print(os.getcwd())
-    ImageGrab.grab().save(img_name)  # 截图并保存
-    myshow.thread.bot.file_helper.send_image(img_name)  # 微信发送截图给自己
-    os.chdir("..")
-    myshow.thread.bot.file_helper.send(time_msg)  # 发送消息，截图时间
-    myshow.thread._signal_3.emit('[远控信息] 已发送截图')
+    def shutdown_pc(self):
+        '''本机关机'''
+        os.system('shutdown -s -t 60')  # 执行计算机系统指令，这里是60秒后关机
+        send_msg = '[远控信息] 60秒后电脑关机\n取消关机命令:\n#取消关机'  # 发送警告消息，提醒取消指令
+        self.bot.file_helper.send(send_msg)
+        self._signal_3.emit('[远控信息] 警告：60秒后关机')
 
-def shutdown_pc():
-    '''本机关机'''
-    os.system('shutdown -s -t 60')  # 执行计算机系统指令，这里是60秒后关机
-    send_msg = '[远控信息] 60秒后电脑关机\n取消关机命令:\n#取消关机'  # 发送警告消息，提醒取消指令
-    myshow.thread.bot.file_helper.send(send_msg)
-    myshow.thread._signal_3.emit('[远控信息] 警告：60秒后关机')
+    def cancel_shutdown(self):
+        '''取消关机'''
+        os.system('shutdown -a')
+        send_msg = '[远控信息] 此次关机已取消'
+        self.bot.file_helper.send(send_msg)
+        self._signal_3.emit(send_msg)
 
-def cancel_shutdown():
-    '''取消关机'''
-    os.system('shutdown -a')
-    send_msg = '[远控信息] 此次关机已取消'
-    myshow.thread.bot.file_helper.send(send_msg)
-    myshow.thread._signal_3.emit(send_msg)
+    def run_file(self, do_at_2):
+        '''打开文件或程序，文件位置套上英文双引号'''
+        # file_cmd = '"' +do_at_2+ '"'
+        file_cmd = 'start ' + do_at_2
+        os.system(file_cmd)
+        send_msg = '[远控信息] 已打开文件/程序：' + do_at_2
+        self.bot.file_helper.send(send_msg)
+        self._signal_3.emit(send_msg)
 
-def run_file(do_cmd):
-    '''打开文件或程序，文件位置套上英文双引号'''
-    # file_cmd = '"' +do_cmd+ '"'
-    file_cmd = 'start ' + do_cmd
-    os.system(file_cmd)
-    send_msg = '[远控信息] 已打开文件/程序：' + do_cmd
-    myshow.thread.bot.file_helper.send(send_msg)
-    myshow.thread._signal_3.emit(send_msg)
+    def shutdown_process(self, do_at_2):
+        '''关闭程序'''
+        process_cmd = 'taskkill /f /t /im ' + do_at_2 + '.exe'
+        os.system(process_cmd)
+        send_msg = '[远控信息] 已关闭进程：' + do_at_2
+        self.bot.file_helper.send(send_msg)
+        self._signal_3.emit(send_msg)
 
-def shutdown_process(do_cmd):
-    '''关闭程序'''
-    process_cmd = 'taskkill /f /t /im ' + do_cmd + '.exe'
-    os.system(process_cmd)
-    send_msg = '[远控信息] 已关闭进程：' + do_cmd
-    myshow.thread.bot.file_helper.send(send_msg)
-    myshow.thread._signal_3.emit(send_msg)
+    def open_web(self, do_at_2):
+        '''浏览器打开网页'''
+        # web_cmd = 'start https://' + do_at_2         # 可以使用默认浏览器打开网页，但接下来关闭浏览器进程时，需要作相应修改
+        web_cmd = 'start iexplore https://' + do_at_2  # 使用IE打开网页
+        os.system(web_cmd)
+        send_msg = '[远控信息] 已打开网页：' + do_at_2
+        self.bot.file_helper.send(send_msg)
+        self._signal_3.emit(send_msg)
 
-def open_web(do_cmd):
-    '''浏览器打开网页'''
-    # web_cmd = 'start https://' + do_cmd         # 可以使用默认浏览器打开网页，但接下来关闭浏览器进程时，需要作相应修改
-    web_cmd = 'start iexplore https://' + do_cmd  # 使用IE打开网页
-    os.system(web_cmd)
-    send_msg = '[远控信息] 已打开网页：' + do_cmd
-    myshow.thread.bot.file_helper.send(send_msg)
-    myshow.thread._signal_3.emit(send_msg)
+    def close_browser(self):
+        '''关闭IE浏览器，其他浏览器请自行加入进程名'''
+        # close_ie = 'tskill iexplore' # 需要设置环境变量
+        close_ie = 'taskkill /f /t /im iexplore.exe'
+        os.system(close_ie)
+        send_msg = '[远控信息] 已关闭IE浏览器'
+        self.bot.file_helper.send(send_msg)
+        self._signal_3.emit(send_msg)
 
-def close_browser():
-    '''关闭IE浏览器，其他浏览器请自行加入进程名'''
-    # close_ie = 'tskill iexplore' # 需要设置环境变量
-    close_ie = 'taskkill /f /t /im iexplore.exe'
-    os.system(close_ie)
-    send_msg = '[远控信息] 已关闭IE浏览器'
-    myshow.thread.bot.file_helper.send(send_msg)
-    myshow.thread._signal_3.emit(send_msg)
-
-def more_cmd(do_cmd):
-    '''更多指令，即cmd命令，如：explorer是资源管理器，具体请百度cmd命令大全'''
-    os.system(do_cmd)
-    send_msg = '[远控信息] 已执行CMD指令：' + do_cmd
-    myshow.thread.bot.file_helper.send(send_msg)
-    myshow.thread._signal_3.emit(send_msg)
+    def more_cmd(self, do_at_2):
+        '''更多指令，即cmd命令，如：explorer是资源管理器，具体请百度cmd命令大全'''
+        os.system(do_at_2)
+        send_msg = '[远控信息] 已执行CMD指令：' + do_at_2
+        self.bot.file_helper.send(send_msg)
+        self._signal_3.emit(send_msg)
 
 
-def send_2key(key_1, key_2):
-    '''发送键盘组合键,key_1,key_2,查按键码表'''
-    win32api.keybd_event(key_1, 0, 0, 0)  # 键盘按下
-    time.sleep(1)
-    win32api.keybd_event(key_2, 0, 0, 0)  # 键盘按下
-    time.sleep(1)
-    win32api.keybd_event(key_2, 0, win32con.KEYEVENTF_KEYUP, 0)  # 键盘松开
-    win32api.keybd_event(key_1, 0, win32con.KEYEVENTF_KEYUP, 0)  # 键盘松开
-    # 不发送信息
+    def send_2key(self, key_1, key_2):
+        '''发送键盘组合键,key_1,key_2,查按键码表'''
+        win32api.keybd_event(key_1, 0, 0, 0)  # 键盘按下
+        time.sleep(1)
+        win32api.keybd_event(key_2, 0, 0, 0)  # 键盘按下
+        time.sleep(1)
+        win32api.keybd_event(key_2, 0, win32con.KEYEVENTF_KEYUP, 0)  # 键盘松开
+        win32api.keybd_event(key_1, 0, win32con.KEYEVENTF_KEYUP, 0)  # 键盘松开
+        # 不发送信息
 
-def send_win_d():
-    '''发送组合键win+D，显示桌面，再按一次显示原程序窗口'''
-    send_2key(91, 68)  # 查按键码表 win->91  d->68
-    send_msg = '[远控信息] Win+D窗口最小化\n再次发送，还原窗口'
-    myshow.thread.bot.file_helper.send(send_msg)
-    myshow.thread._signal_3.emit('[远控信息] Win+D窗口最小化')
+    def send_win_d(self):
+        '''发送组合键win+D，显示桌面，再按一次显示原程序窗口'''
+        self.send_2key(91, 68)  # 查按键码表 win->91  d->68
+        send_msg = '[远控信息] Win+D窗口最小化\n再次发送，还原窗口'
+        self.bot.file_helper.send(send_msg)
+        self._signal_3.emit('[远控信息] Win+D窗口最小化')
 
-def send_alt_tab():
-    '''发送组合键alt+tab，切换窗口'''
-    send_2key(18, 9)  # 查按键码表 win->91  d->68
-    time.sleep(1)  # 等1秒再执行下面的截图
-    img_to_myself()  # 发送截图
-    send_msg = '[远控信息] 已切换程序窗口\n当前窗口见上图'
-    myshow.thread.bot.file_helper.send(send_msg)
-    myshow.thread._signal_3.emit('[远控信息] 已切换程序窗口')
-
-
-def reply_busy_on():
-    '''打开忙碌回复'''
-    myshow.checkBox_busy.setChecked(True)
-    send_msg = '[远控信息] 已打开忙碌回复功能'
-    myshow.thread.bot.file_helper.send(send_msg)
-    myshow.thread._signal_3.emit(send_msg)
-
-def reply_busy_off():
-    '''关闭忙碌回复'''
-    myshow.checkBox_busy.setChecked(False)
-    send_msg = '[远控信息] 已关闭忙碌回复功能'
-    myshow.thread.bot.file_helper.send(send_msg)
-    myshow.thread._signal_3.emit(send_msg)
-
-def reply_robot_on():
-    '''打开机器人回复'''
-    myshow.checkBox_robot.setChecked(True)
-    send_msg = '[远控信息] 已打开机器人回复功能'
-    myshow.thread.bot.file_helper.send(send_msg)
-    myshow.thread._signal_3.emit(send_msg)
-
-def reply_robot_off():
-    '''关闭机器人回复'''
-    myshow.checkBox_robot.setChecked(False)
-    send_msg = '[远控信息] 已关闭机器人回复功能'
-    myshow.thread.bot.file_helper.send(send_msg)
-    myshow.thread._signal_3.emit(send_msg)
+    def send_alt_tab(self):
+        '''发送组合键alt+tab，切换窗口'''
+        self.send_2key(18, 9)  # 查按键码表 win->91  d->68
+        time.sleep(1)  # 等1秒再执行下面的截图
+        self.img_to_myself()  # 发送截图
+        send_msg = '[远控信息] 已切换程序窗口\n当前窗口见上图'
+        self.bot.file_helper.send(send_msg)
+        self._signal_3.emit('[远控信息] 已切换程序窗口')
 
 
+    def reply_busy_on(self):
+        '''打开忙碌回复'''
+        myshow.checkBox_busy.setChecked(True)
+        send_msg = '[远控信息] 已打开忙碌回复功能'
+        self.bot.file_helper.send(send_msg)
+        self._signal_3.emit(send_msg)
+
+    def reply_busy_off(self):
+        '''关闭忙碌回复'''
+        myshow.checkBox_busy.setChecked(False)
+        send_msg = '[远控信息] 已关闭忙碌回复功能'
+        self.bot.file_helper.send(send_msg)
+        self._signal_3.emit(send_msg)
+
+    def reply_robot_on(self):
+        '''打开机器人回复'''
+        myshow.checkBox_robot.setChecked(True)
+        send_msg = '[远控信息] 已打开机器人回复功能'
+        self.bot.file_helper.send(send_msg)
+        self._signal_3.emit(send_msg)
+
+    def reply_robot_off(self):
+        '''关闭机器人回复'''
+        myshow.checkBox_robot.setChecked(False)
+        send_msg = '[远控信息] 已关闭机器人回复功能'
+        self.bot.file_helper.send(send_msg)
+        self._signal_3.emit(send_msg)
 
 
 
@@ -769,9 +762,9 @@ def reply_robot_off():
 #########################################################################################################
 
 if __name__ == "__main__":
-    import sys
+    current_path = os.getcwd()
     app = QtWidgets.QApplication(sys.argv)
-    QtWidgets.QApplication.setQuitOnLastWindowClosed(False) # 关闭窗口,也不关闭应用程序
+    # QtWidgets.QApplication.setQuitOnLastWindowClosed(False) # 关闭窗口,也不关闭应用程序
     myshow = MyWindow()
     myshow.show()
     # 自动回复等功能选项默认开关
@@ -807,6 +800,5 @@ if __name__ == "__main__":
             # if reason == 2 :
             myshow.show()
     tp.activated.connect(act)
-
 
     sys.exit(app.exec_())
