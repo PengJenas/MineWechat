@@ -28,6 +28,7 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         #self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint)		# 右上角只有关闭按钮
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)  # 没有标题栏
         self.setWindowOpacity(0.95) # 透明
+        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)  # 设置窗口背景透明
 
         # 初始化标签、文本框提示,禁用不需要输入的文本框
         self.output_info("请点击左侧的扫码按钮！")

@@ -14,14 +14,24 @@ class Ui_Form(object):
         Form.resize(850, 600)
         Form.setMinimumSize(QtCore.QSize(850, 600))
         Form.setMaximumSize(QtCore.QSize(850, 600))
-        Form.setStyleSheet("font: 75 9pt \"微软雅黑\";\n"
+        Form.setStyleSheet("QWidget{\n"
+"font: 75 10pt \"微软雅黑\";\n"
+"}\n"
+"QWidget#Form{\n"
+"background-color:rgb(255, 85, 255);/*会被背景透明*/\n"
+"}\n"
 "")
+        self.Layout_Form = QtWidgets.QHBoxLayout(Form)
+        self.Layout_Form.setContentsMargins(0, 0, 0, 0)
+        self.Layout_Form.setSpacing(0)
+        self.Layout_Form.setObjectName("Layout_Form")
         self.verticalWidget_1 = QtWidgets.QWidget(Form)
-        self.verticalWidget_1.setGeometry(QtCore.QRect(0, 0, 60, 600))
         self.verticalWidget_1.setMinimumSize(QtCore.QSize(60, 600))
         self.verticalWidget_1.setMaximumSize(QtCore.QSize(60, 600))
         self.verticalWidget_1.setStyleSheet("QWidget#verticalWidget_1{\n"
 "background-color: rgb(67, 67, 67);\n"
+"border-top-left-radius:12px;\n"
+"border-bottom-left-radius:12px;\n"
 "}\n"
 "QLabel#label_name{\n"
 "font: 12pt;\n"
@@ -45,7 +55,7 @@ class Ui_Form(object):
 "")
         self.verticalWidget_1.setObjectName("verticalWidget_1")
         self.verticalLayout_1 = QtWidgets.QVBoxLayout(self.verticalWidget_1)
-        self.verticalLayout_1.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_1.setContentsMargins(0, 15, 0, 15)
         self.verticalLayout_1.setSpacing(0)
         self.verticalLayout_1.setObjectName("verticalLayout_1")
         self.label_name = QtWidgets.QLabel(self.verticalWidget_1)
@@ -122,8 +132,8 @@ class Ui_Form(object):
         self.toolButton_19logout.setIconSize(QtCore.QSize(30, 30))
         self.toolButton_19logout.setObjectName("toolButton_19logout")
         self.verticalLayout_1.addWidget(self.toolButton_19logout)
+        self.Layout_Form.addWidget(self.verticalWidget_1)
         self.verticalWidget_2 = QtWidgets.QWidget(Form)
-        self.verticalWidget_2.setGeometry(QtCore.QRect(60, 0, 250, 600))
         self.verticalWidget_2.setMinimumSize(QtCore.QSize(250, 600))
         self.verticalWidget_2.setMaximumSize(QtCore.QSize(250, 600))
         self.verticalWidget_2.setStyleSheet("QWidget{\n"
@@ -171,7 +181,7 @@ class Ui_Form(object):
         self.verticalWidget_2.setObjectName("verticalWidget_2")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.verticalWidget_2)
         self.verticalLayout_2.setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
-        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_2.setContentsMargins(0, 15, 0, 15)
         self.verticalLayout_2.setSpacing(0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.horizontalLayout_21 = QtWidgets.QWidget(self.verticalWidget_2)
@@ -300,18 +310,27 @@ class Ui_Form(object):
         self.stackedWidget_1.addWidget(self.page_23)
         self.verticalLayout_22.addWidget(self.stackedWidget_1)
         self.verticalLayout_2.addWidget(self.verticalWidget_22)
+        self.Layout_Form.addWidget(self.verticalWidget_2)
         self.verticalWidget_3 = QtWidgets.QWidget(Form)
-        self.verticalWidget_3.setGeometry(QtCore.QRect(310, 0, 546, 600))
         self.verticalWidget_3.setMinimumSize(QtCore.QSize(0, 600))
         self.verticalWidget_3.setMaximumSize(QtCore.QSize(16777215, 600))
         self.verticalWidget_3.setStyleSheet("QWidget#verticalWidget_3{\n"
 "background-color: rgb(245, 245, 245);\n"
+"border-top-right-radius:12px;\n"
+"border-bottom-right-radius:12px;\n"
 "}\n"
 "QLabel{\n"
 "font: 16pt ;\n"
 "padding:0px 16px 0px 16px;\n"
 "border-style:solid;\n"
 "border-width:0px 0px 1px 0px;\n"
+"border-color: rgb(200, 200, 200);\n"
+"}\n"
+"QLabel#label_busy{\n"
+"font:13px;\n"
+"margin:5px;\n"
+"border-style:solid;\n"
+"border-width:0px 0px 0px 0px;\n"
 "border-color: rgb(200, 200, 200);\n"
 "}\n"
 "QTextEdit{\n"
@@ -357,10 +376,17 @@ class Ui_Form(object):
 "QCheckBox{\n"
 "margin: 15px 0px ;\n"
 "}\n"
-"")
+"QTextEdit#textEdit_output{\n"
+"padding:5px 10px 0px 10px;\n"
+"margin:0px;\n"
+"border-style:solid;\n"
+"border-width:0px 0px 0px 0px;\n"
+"background-color: rgb(245, 245, 245);\n"
+"/*background-color: rgb(255, 255, 255);*/\n"
+"}")
         self.verticalWidget_3.setObjectName("verticalWidget_3")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.verticalWidget_3)
-        self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_3.setContentsMargins(0, 15, 0, 15)
         self.verticalLayout_3.setSpacing(0)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.verticalWidget_32 = QtWidgets.QWidget(self.verticalWidget_3)
@@ -531,13 +557,7 @@ class Ui_Form(object):
         self.verticalLayout_16.setSpacing(0)
         self.verticalLayout_16.setObjectName("verticalLayout_16")
         self.verticalWidget_5 = QtWidgets.QWidget(self.page_34)
-        self.verticalWidget_5.setStyleSheet("QLabel#label_busy{\n"
-"font:13px;\n"
-"margin:5px;\n"
-"border-style:solid;\n"
-"border-width:0px 0px 0px 0px;\n"
-"border-color: rgb(200, 200, 200);\n"
-"}\n"
+        self.verticalWidget_5.setStyleSheet("\n"
 "")
         self.verticalWidget_5.setObjectName("verticalWidget_5")
         self.verticalLayout_12 = QtWidgets.QVBoxLayout(self.verticalWidget_5)
@@ -607,14 +627,7 @@ class Ui_Form(object):
         self.verticalWidget_33 = QtWidgets.QWidget(self.verticalWidget_3)
         self.verticalWidget_33.setMinimumSize(QtCore.QSize(0, 55))
         self.verticalWidget_33.setMaximumSize(QtCore.QSize(16777215, 40))
-        self.verticalWidget_33.setStyleSheet("QTextEdit{\n"
-"padding:5px 10px 0px 10px;\n"
-"margin:0px;\n"
-"border-style:solid;\n"
-"border-width:0px 0px 0px 0px;\n"
-"background-color: rgb(245, 245, 245);\n"
-"/*background-color: rgb(255, 255, 255);*/\n"
-"}")
+        self.verticalWidget_33.setStyleSheet("")
         self.verticalWidget_33.setObjectName("verticalWidget_33")
         self.verticalLayout_33 = QtWidgets.QVBoxLayout(self.verticalWidget_33)
         self.verticalLayout_33.setContentsMargins(0, 0, 0, 0)
@@ -626,10 +639,11 @@ class Ui_Form(object):
         self.textEdit_output.setObjectName("textEdit_output")
         self.verticalLayout_33.addWidget(self.textEdit_output)
         self.verticalLayout_3.addWidget(self.verticalWidget_33)
+        self.Layout_Form.addWidget(self.verticalWidget_3)
 
         self.retranslateUi(Form)
         self.stackedWidget_1.setCurrentIndex(0)
-        self.stackedWidget_2.setCurrentIndex(1)
+        self.stackedWidget_2.setCurrentIndex(3)
         self.tabWidget_friend.setCurrentIndex(0)
         self.tabWidget_chatroom.setCurrentIndex(0)
         self.toolButton_17hide.clicked.connect(Form.hide)
