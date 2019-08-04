@@ -15,11 +15,11 @@
 - 微信远程控制电脑
 
 ## ⛺ 软件截图
+![0.png](https://i.loli.net/2019/08/04/PXi2oyEZVMvnd6A.png)
 ![1.png](https://i.loli.net/2019/05/18/5cdfaf499d85c67086.png)
 ![2.png](https://i.loli.net/2019/05/18/5cdfaf49ad94664867.png)
 ![3.png](https://i.loli.net/2019/05/18/5cdfaf491807345648.png)
 ![4.png](https://i.loli.net/2019/05/18/5cdfaf49c5f2088321.png)
-![5.png](https://i.loli.net/2019/05/18/5cdfaf49ce0eb70500.png)
 ![6.png](https://i.loli.net/2019/03/08/5c8234b6d9c58.png)
 ![7.png](https://i.loli.net/2019/03/08/5c8234b6e3a18.png)
 
