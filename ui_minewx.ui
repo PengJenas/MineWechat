@@ -27,7 +27,7 @@
   </property>
   <property name="styleSheet">
    <string notr="true">QWidget{
-font: 75 12pt &quot;微软雅黑&quot;;
+font: 75 10pt &quot;微软雅黑&quot;;
 }
 QWidget#Form{
 background-color:rgb(255, 85, 255);/*会被背景透明*/
@@ -917,7 +917,7 @@ background-color: rgb(245, 245, 245);
             <string notr="true"/>
            </property>
            <property name="currentIndex">
-            <number>3</number>
+            <number>0</number>
            </property>
            <widget class="QWidget" name="page_31">
             <layout class="QVBoxLayout" name="verticalLayout_5" stretch="0,0">
@@ -1444,8 +1444,7 @@ background-color: rgb(245, 245, 245);
              <item>
               <widget class="QWidget" name="verticalWidget_5" native="true">
                <property name="styleSheet">
-                <string notr="true">
-</string>
+                <string notr="true"/>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_12">
                 <property name="spacing">
@@ -1721,7 +1720,7 @@ background-color: rgb(245, 245, 245);
   </connection>
  </connections>
  <buttongroups>
-  <buttongroup name="buttonGroup_left"/>
   <buttongroup name="buttonGroup_mid"/>
+  <buttongroup name="buttonGroup_left"/>
  </buttongroups>
 </ui>

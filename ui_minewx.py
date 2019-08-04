@@ -557,8 +557,7 @@ class Ui_Form(object):
         self.verticalLayout_16.setSpacing(0)
         self.verticalLayout_16.setObjectName("verticalLayout_16")
         self.verticalWidget_5 = QtWidgets.QWidget(self.page_34)
-        self.verticalWidget_5.setStyleSheet("\n"
-"")
+        self.verticalWidget_5.setStyleSheet("")
         self.verticalWidget_5.setObjectName("verticalWidget_5")
         self.verticalLayout_12 = QtWidgets.QVBoxLayout(self.verticalWidget_5)
         self.verticalLayout_12.setContentsMargins(0, 0, 0, 0)
@@ -643,7 +642,7 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
         self.stackedWidget_1.setCurrentIndex(0)
-        self.stackedWidget_2.setCurrentIndex(3)
+        self.stackedWidget_2.setCurrentIndex(0)
         self.tabWidget_friend.setCurrentIndex(0)
         self.tabWidget_chatroom.setCurrentIndex(0)
         self.toolButton_17hide.clicked.connect(Form.hide)
