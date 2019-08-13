@@ -27,8 +27,9 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         #QtWidgets.QApplication.setStyle(QtWidgets.QStyleFactory.create('Fusion'))   # 风格
         #self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint)		# 右上角只有关闭按钮
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)  # 没有标题栏
-        self.setWindowOpacity(0.95) # 透明
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)  # 设置窗口背景透明
+        self.setWindowOpacity(0.95) # 窗体透明度
+        self.addSystemTray() # 调用托盘函数
 
         # 初始化标签、文本框提示,禁用不需要输入的文本框
         self.output_info("请点击左侧的扫码按钮！")
@@ -114,6 +115,38 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
     def mouseReleaseEvent(self, QMouseEvent):
         self.m_flag = False
         self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
+
+    # 托盘菜单
+    def addSystemTray(self):
+        # 在系统托盘处显示图标
+        self.tp = QtWidgets.QSystemTrayIcon(self)
+        self.tp.setIcon(QtGui.QIcon(":/img/images/wechat.png"))
+        # 设置系统托盘图标的菜单
+        a1 = QtWidgets.QAction('&显示(Show)', self, triggered=self.show)
+        a2 = QtWidgets.QAction('&隐藏(Hide)', self, triggered=self.hide)
+        a3 = QtWidgets.QAction('&退出(Exit)', self, triggered=self.quitApp) # 不用self.close()是因为windows中退出程序，托盘图标还会残留 
+        self.tpMenu = QtWidgets.QMenu(self)
+        self.tpMenu.addAction(a1)
+        self.tpMenu.addAction(a2)
+        self.tpMenu.addSeparator()
+        self.tpMenu.addAction(a3)
+        self.tp.setContextMenu(self.tpMenu)
+        self.tp.show()     # 不调用show不会显示系统托盘
+        # 托盘信息提示,参数1：标题,参数2：内容,参数3：图标（0没有图标 1信息图标 2警告图标 3错误图标），0还是有一个小图标
+        # self.tp.showMessage('MineWechat','隐藏窗口，我在这里！',icon=0)
+        # 鼠标点击托盘图标
+        self.tp.activated.connect(self.act)
+    def act(self, reason):  # 鼠标点击托盘图标
+        # 鼠标点击icon传递的信号会带有一个整形的值，1是表示单击右键，2是双击，3是单击左键，4是用鼠标中键点击
+        # if reason == 2 :
+        if reason == 3:
+            self.show()
+    def quitApp(self):
+        # windows系统中，应用程序关闭后，托盘图标还不会自动消失，
+        # 直到你的鼠标移动到上面去后，才会消失，
+        # 可以通过将其setVisible(False)来完成的。
+        QtCore.QCoreApplication.instance().quit() 
+        self.tp.setVisible(False)
 
 
     ####################################################
@@ -772,29 +805,4 @@ if __name__ == "__main__":
     reply_busy = False
     reply_robot = False
     remote_pc = True
-
-    # 在系统托盘处显示图标
-    tp = QtWidgets.QSystemTrayIcon(myshow)
-    tp.setIcon(QtGui.QIcon(":/img/images/wechat.png"))
-    # 设置系统托盘图标的菜单
-    a1 = QtWidgets.QAction('&显示(Show)', triggered=myshow.show)
-    def quitApp():  # 退出程序
-        QtCore.QCoreApplication.instance().quit()  # 关闭窗体程序
-        tp.setVisible(False)  # 隐藏托盘,防止退出后图标残留
-    a2 = QtWidgets.QAction('&退出(Exit)', triggered=quitApp)  # 直接退出可以用QtWidgets.qApp.quit ,但会残留图标直到鼠标经过
-    tpMenu = QtWidgets.QMenu()
-    tpMenu.addAction(a1)
-    tpMenu.addAction(a2)
-    tp.setContextMenu(tpMenu)
-    # 不调用show不会显示系统托盘
-    tp.show()
-    # 托盘信息提示,参数1：标题,参数2：内容,参数3：图标（0没有图标 1信息图标 2警告图标 3错误图标），0还是有一个小图标
-    # tp.showMessage('MineWechat','关闭程序窗口，我依然在这里！',icon=0)
-    # 鼠标点击托盘图标
-    def act(reason):
-        if reason == 2 or reason == 3:  # 鼠标点击icon传递的信号会带有一个整形的值，1是表示单击右键，2是双击，3是单击左键，4是用鼠标中键点击
-            # if reason == 2 :
-            myshow.show()
-    tp.activated.connect(act)
-
     sys.exit(app.exec_())
