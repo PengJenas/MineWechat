@@ -1,35 +1,36 @@
 # -*- coding: utf-8 -*-
 # Author: Jenas
-# Date: 2019-07-31
-
+# Date: 2019-08-24
+# wxpy 发送文件失败，升级itchat就能解决  # pip install itchat==1.3.10
 
 import os
 import sys
 import time
-import win32api    # pywin32 系统api,linux不兼容
-import win32con    # pywin32 操作键盘,linux不兼容
+# import win32api    # pywin32 系统api,linux不兼容
+# import win32con    # pywin32 操作键盘,linux不兼容
 from pypinyin import lazy_pinyin  # 好友列表按拼音排序
 import imghdr    # 识别图像格式
-from wxpy import Bot,Tuling,embed,Group,User
-from wxpy import  TEXT, ATTACHMENT, PICTURE, RECORDING, VIDEO    #, CARD, FRIENDS, MAP, SHARING # 各种消息类型
+from wxpy import Bot, Tuling, Group, User
+from wxpy import TEXT, ATTACHMENT, PICTURE, RECORDING, VIDEO    # , CARD, FRIENDS, MAP, SHARING # 各种消息类型
 from PyQt5 import QtCore, QtGui, QtWidgets
 from ui_minewx import Ui_Form    # 程序UI文件
+
+
 
 
 #########################################################################################################
 # MyWindow窗口
 #########################################################################################################
 
-class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文件中的匹配
+class MyWindow(QtWidgets.QWidget, Ui_Form):          # 注意Ui_Form要跟UI文件中的匹配
     def __init__(self):                             
         super(MyWindow, self).__init__()
         self.setupUi(self)
-        #QtWidgets.QApplication.setStyle(QtWidgets.QStyleFactory.create('Fusion'))   # 风格
-        #self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint)		# 右上角只有关闭按钮
-        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)  # 没有标题栏
-        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)  # 设置窗口背景透明
-        self.setWindowOpacity(0.95) # 窗体透明度
-        self.addSystemTray() # 调用托盘函数
+        # QtWidgets.QApplication.setStyle(QtWidgets.QStyleFactory.create('Fusion'))   # 风格
+        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)          # 没有标题栏
+        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)       # 设置窗口背景透明
+        self.setWindowOpacity(0.95)                                 # 窗体透明度
+        self.addSystemTray()                                        # 调用托盘函数
 
         # 初始化标签、文本框提示,禁用不需要输入的文本框
         self.output_info("请点击左侧的扫码按钮！")
@@ -43,7 +44,8 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         self.toolButton_12chatroom.clicked.connect(lambda: self.stackedWidget_1.setCurrentIndex(1))
         self.toolButton_12chatroom.clicked.connect(lambda: self.stackedWidget_2.setCurrentIndex(1))
         self.toolButton_13more.clicked.connect(lambda: self.stackedWidget_1.setCurrentIndex(2))
-        def btn_more_clicked():   # 更多功能中，还对应三个按钮
+        # 更多功能中，还对应三个按钮
+        def btn_more_clicked():
             if self.toolButton_21remote.isChecked():
                 self.stackedWidget_2.setCurrentIndex(2)
             elif self.toolButton_22reply.isChecked():
@@ -69,14 +71,19 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
         self.pushButton_file_helper.clicked.connect(self.file_to_helper)
         self.pushButton_file_friend.clicked.connect(self.file_to_friend)
         self.pushButton_file_chatroom.clicked.connect(self.file_to_chatroom)
-        # 复选框
+        
+        # 自动回复等功能选项复选框
         self.checkBox_remote.setChecked(True)   # 默认勾选
         self.checkBox_busy.stateChanged.connect(self.check_busy) 
         self.checkBox_robot.stateChanged.connect(self.check_robot)
         self.checkBox_remote.stateChanged.connect(self.check_remote)
+        # 设置自动回复等功能选项默认开关
+        self.remote_pc = True
+        self.reply_busy = False
+        self.reply_robot = False
 
         # 登陆微信前,使按钮失效
-        #self.toolButton_19logout.setEnabled(False)
+        # self.toolButton_19logout.setEnabled(False)
         self.pushButton_text_helper.setEnabled(False)
         self.pushButton_text_friend.setEnabled(False)
         self.pushButton_text_chatroom.setEnabled(False)
@@ -98,7 +105,6 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
                     '7. 想起来再补……'
         self.textEdit_help.setText(text_help)
 
-
     # 按住鼠标，拖动窗口
     def mousePressEvent(self, event):
         if event.button() == QtCore.Qt.LeftButton:
@@ -106,12 +112,10 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
             self.m_Position = event.globalPos() - self.pos()  # 获取鼠标相对窗口的位置
             event.accept()
             self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))  # 更改鼠标图标
-
     def mouseMoveEvent(self, QMouseEvent):
         if QtCore.Qt.LeftButton and self.m_flag:
             self.move(QMouseEvent.globalPos() - self.m_Position)  # 更改窗口位置
             QMouseEvent.accept()
-
     def mouseReleaseEvent(self, QMouseEvent):
         self.m_flag = False
         self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
@@ -180,9 +184,9 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
     def logout(self):
         # myshow.thread.bot.logout()
         # time.sleep(0.2)
-        quitApp()#底部托盘的方法
+        self.quitApp()#底部托盘的方法
 
-    # 微信用户名
+    # 自己的微信用户名
     def get_username(self,username):
         self.username = username
         self.label_name.setText(self.username)
@@ -280,25 +284,23 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
     def check_busy(self):
         check_state = self.checkBox_busy.checkState()
         #print(check_state)
-        global reply_busy
         if check_state == QtCore.Qt.Checked:
             self.output_info('已打开[忙碌回复]功能')
-            reply_busy =True
+            self.reply_busy =True
         elif check_state == QtCore.Qt.Unchecked:
             self.output_info('已关闭[忙碌回复]功能')
-            reply_busy = False
+            self.reply_busy = False
 
     # 微信机器人回复功能开关
     def check_robot(self):
         check_state = self.checkBox_robot.checkState()
         #print(check_state)
-        global reply_robot
         if check_state == QtCore.Qt.Checked:
             self.output_info('已打开[机器人回复]功能')
-            reply_robot =True
+            self.reply_robot =True
         elif check_state == QtCore.Qt.Unchecked:
             self.output_info('已关闭[机器人回复]功能')
-            reply_robot = False
+            self.reply_robot = False
 
     # 调用图灵机器人的api，利用爬虫，根据聊天消息返回回复内容
     tuling = Tuling(api_key='9489eda6f3704a65b0221a3f65e0b98b')  # wxpy整合了图灵机器人
@@ -307,13 +309,12 @@ class MyWindow(QtWidgets.QWidget,Ui_Form):          # 注意Ui_Form要跟UI文�
     def check_remote(self):
         check_state = self.checkBox_remote.checkState()
         #print(check_state)
-        global remote_pc
         if check_state == QtCore.Qt.Checked:
             self.output_info('已打开[微信远控]功能')
-            remote_pc = True
+            self.remote_pc = True
         elif check_state == QtCore.Qt.Unchecked:
             self.output_info('已关闭[微信远控]功能')
-            remote_pc = False
+            self.remote_pc = False
 
     # 记录远程控制相关信息
     def output_remote_info(self,message):       
@@ -478,7 +479,7 @@ class MyThread(QtCore.QThread):
         self.get_chatroomslist()
 
         ############################
-        # 处理接受到的微信消息
+        # 处理接收到的微信消息
         ############################
         # @self.bot.register(msg_types=TEXT,except_self=False)
         # def just_print(msg):
@@ -494,7 +495,7 @@ class MyThread(QtCore.QThread):
                 from_Name = '我'
                 if msg.receiver.name == '文件传输助手':
                     to_Name = '助手'
-                    if '#' in msg.text and remote_pc == True:  # 执行命令条件：1发给助手 2命令中带井号 3远控开启
+                    if '#' in msg.text and myshow.remote_pc == True:  # 执行命令条件：1发给助手 2命令中带井号 3远控开启
                         do_what = msg.text.split('#')[1]  # 以#分割，取第二个元素，即：具体指令。
                         self.wechat_do(do_what)  # 调用微信远控的方法
                 else:
@@ -507,10 +508,10 @@ class MyThread(QtCore.QThread):
                 else:
                     from_Name = msg.chat.name
                 # 自动回复
-                if reply_busy == True:  # 忙碌回复
+                if myshow.reply_busy == True:  # 忙碌回复
                     msg_busy = myshow.lineEdit_busy.text()
                     msg.reply('[自动回复] %s' % msg_busy)
-                if reply_robot == True:  # 机器人回复
+                if myshow.reply_robot == True:  # 机器人回复
                     myshow.tuling.do_reply(msg) # 调用图灵机器人回复
             message = from_Name + '→' + to_Name + '：' + msg.text
             msg_time = msg.create_time
@@ -539,10 +540,10 @@ class MyThread(QtCore.QThread):
                 else:
                     from_Name = msg.chat.name
                 # 自动回复
-                if reply_busy == True:
+                if myshow.reply_busy == True:
                     msg_busy = myshow.lineEdit_busy.text()
                     msg.reply('[自动回复] %s' % msg_busy)
-                if reply_robot == True:  # 机器人回复
+                if myshow.reply_robot == True:  # 机器人回复
                     myshow.tuling.do_reply(msg)
                     # 新建接收文件夹
             downloadDir = '接收文件'
@@ -565,10 +566,10 @@ class MyThread(QtCore.QThread):
             #print(msg)
             if msg.is_at:
                 #print(msg.member.name)
-                if reply_busy == True:
+                if myshow.reply_busy == True:
                     msg_busy = myshow.lineEdit_busy.text()
                     msg.reply(u'@%s\u2005[自动回复] %s' % (msg.member.nick_name, msg_busy))
-                if reply_robot == True:
+                if myshow.reply_robot == True:
                     myshow.tuling.do_reply(msg)
                 from_Name = msg.member.name # 成员名
                 chatroom_NickName = msg.chat.name #群聊名
@@ -670,8 +671,10 @@ class MyThread(QtCore.QThread):
         QtCore.QThread.sleep(1)  # 等一下，等主线程截图...
         isImgExist = os.path.exists(img_name)  # 是否存在
         if not isImgExist:
+            print('找不到截图文件')
             QtCore.QThread.sleep(1)   # 再等一等......
         self.bot.file_helper.send_image(img_name)  # 微信发送截图给自己
+        # print('发送截图完成！')
         os.chdir(current_path)
         # print(os.getcwd())
         self.bot.file_helper.send(time_msg)  # 发送消息，截图时间
@@ -797,12 +800,8 @@ class MyThread(QtCore.QThread):
 
 if __name__ == "__main__":
     current_path = os.getcwd()
+    print('WORK_PATH：' + current_path)
     app = QtWidgets.QApplication(sys.argv)
-    # QtWidgets.QApplication.setQuitOnLastWindowClosed(False) # 关闭窗口,也不关闭应用程序
     myshow = MyWindow()
     myshow.show()
-    # 自动回复等功能选项默认开关
-    reply_busy = False
-    reply_robot = False
-    remote_pc = True
     sys.exit(app.exec_())
