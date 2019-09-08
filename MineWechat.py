@@ -795,11 +795,11 @@ class MyThread(QtCore.QThread):
 
 
 #########################################################################################################
-# 主程序窗口,以及系统托盘
+# 主程序窗口
 #########################################################################################################
 
 if __name__ == "__main__":
-    current_path = os.getcwd()
+    current_path = os.path.split(os.path.realpath(__file__))[0]
     print('WORK_PATH：' + current_path)
     app = QtWidgets.QApplication(sys.argv)
     myshow = MyWindow()
