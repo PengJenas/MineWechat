@@ -6,8 +6,8 @@
 import os
 import sys
 import time
-# import win32api    # pywin32 系统api,linux不兼容
-# import win32con    # pywin32 操作键盘,linux不兼容
+import win32api    # pywin32 win系统api,linux不兼容
+import win32con    # pywin32 win操作键盘,linux不兼容
 from pypinyin import lazy_pinyin  # 好友列表按拼音排序
 import imghdr    # 识别图像格式
 from wxpy import Bot, Tuling, Group, User
