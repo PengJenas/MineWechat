@@ -468,7 +468,7 @@ class MyThread(QtCore.QThread):
     _signal_5 = QtCore.pyqtSignal(list)            # 定义信号，用于记录群聊列表
     _signal_6 = QtCore.pyqtSignal(str)             # 定义信号，用于截图
 
-    def __int__(self, parent=None):
+    def __init__(self, parent=None):
         super(MyThread, self).__init__()
 
     def run(self):
