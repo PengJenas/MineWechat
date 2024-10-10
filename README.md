@@ -1,3 +1,5 @@
+# 微信已不支持网页版，此项目已弃用。
+
 ![python版本](https://img.shields.io/badge/python-3.6-blue.svg)
 ![操作系统](https://img.shields.io/badge/platform-win64-lightgrey.svg)
 
